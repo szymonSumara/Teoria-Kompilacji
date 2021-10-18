@@ -1,7 +1,3 @@
-print('dzien dobry')
-
-import ply
-
 # ------------------------------------------------------------
 # calclex.py
 #
@@ -12,12 +8,32 @@ import ply.lex as lex
 
 # List of token names.   This is always required
 tokens = (
-    'NUMBER',
-    'PLUS',
-    'MINUS',
-    'TIMES',
-    'DIVIDE',
-    'LPAREN',
+    'INTNUM',
+    '+',
+    '-',
+    '*',
+    '/',
+    'DOTADD',
+    'DOTSUB',
+    'DOTMUL',
+    'DOTDIV',
+    '=',
+    'SUBASSIGN',
+    'MULASSIGN',
+    'ADDASSIGN',
+    'DIVASSIGN',
+    '>',
+    '<',
+    'GE',
+    'LE',
+    'DIFFERENT',
+    'EQUAL',
+    '(',
+    ')',
+    '[',
+    ']',
+    '{',
+
     'RPAREN',
 )
 
