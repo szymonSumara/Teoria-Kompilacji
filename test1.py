@@ -6,50 +6,75 @@
 # ------------------------------------------------------------
 import ply.lex as lex
 
-# List of token names.   This is always required
-tokens = (
-    'INTNUM',
-    '+',
-    '-',
-    '*',
-    '/',
-    'DOTADD',
-    'DOTSUB',
-    'DOTMUL',
-    'DOTDIV',
-    '=',
-    'SUBASSIGN',
-    'MULASSIGN',
-    'ADDASSIGN',
-    'DIVASSIGN',
-    '>',
-    '<',
-    'GE',
-    'LE',
-    'DIFFERENT',
-    'EQUAL',
-    '(',
-    ')',
-    '[',
-    ']',
-    '{',
+reserved = {'break': 'BREAK',
+            'continue': 'CONTINUE',
+            'if': 'IF',
+            'else': 'ELSE',
+            }
 
-    'RPAREN',
-)
+# List of token names.   This is always required
+tokens = [
+             'ID',
+             'INTNUM',
+             'ADD',
+             'SUB',
+             'MUL',
+             'DIV',
+             'DOTADD',
+             'DOTSUB',
+             'DOTMUL',
+             'DOTDIV',
+             'ASSIGN',
+             'SUBASSIGN',
+             'MULASSIGN',
+             'ADDASSIGN',
+             'DIVASSIGN',
+             'G',
+             'L',
+             'GE',
+             'LE',
+             'DIFFERENT',
+             'EQUAL',
+             'LPAREN',
+             'RPAREN',
+             'LSQBRACK',
+             'RSQBRACK',
+             'LBRACE',
+             'RBRACE'
+             'RANGE',
+             'TRANSPOSITION',
+             'COMMA',
+             'SEMICOLON',
+    'STRING',
+         ] + list(reserved.values())
 
 # Regular expression rules for simple tokens
-t_PLUS = r'\+'
-t_MINUS = r'-'
-t_TIMES = r'\*'
-t_DIVIDE = r'/'
+t_ADD = r'\+'
+t_SUB = r'-'
+t_MUL = r'\*'
+t_DIV = r'/'
+t_DOTADD = r'\.\+'
+t_DOTSUB = r'\.-'
+t_DOTDIV = r'\./'
+t_DOTMUL = r'\.\*'
 t_LPAREN = r'\('
 t_RPAREN = r'\)'
 
 
 # A regular expression rule with some action code
-def t_NUMBER(t):
+def t_INTNUM(t):
     r'\d+'
     t.value = int(t.value)
+    return t
+
+def t_STRING(t):
+    r'".*"'
+    return t
+
+
+def t_ID(t):
+    r'[a-zA-Z_][a-zA-Z_0-9]*'
+    t.type = reserved.get(t.value, 'ID')  # Check for reserved words
     return t
 
 
@@ -74,8 +99,12 @@ lexer = lex.lex()
 
 # Test it out
 data = '''
-3 + 4 * 10
-  + -20 *2
+3 + (4 * 10
+  .+ -20 *2)) koko)
+  if
+  ifof
+  "foka"
+  "zab"a
 '''
 
 # Give the lexer some input
