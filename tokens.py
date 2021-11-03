@@ -101,6 +101,10 @@ t_TRANSPOSITION = r'\''
 t_COMMA = r'\,' 
 t_SEMICOLON = r'\;'
 
+# string zawierający ignorowane znaki (spacje i taby)
+t_ignore = ' \t'
+t_ignore_COMMENT = r'\#.*'
+
 # identyfikatory (pierwszy znak identyfikatora to litera lub znak _, w kolejnych znakach mogą dodatkowo wystąpić cyfry)     
 def t_ID(t):
     r'[a-zA-Z_][a-zA-Z_0-9]*'
@@ -125,15 +129,13 @@ def t_STRING(t):
     return t
 
 
-# Define a rule so we can track line numbers
+# defniujemy zasadę umożliwiającą numerowanie linii
 def t_newline(t):
     r'\n+'
     t.lexer.lineno += len(t.value)
 
-# A string containing ignored characters (spaces and tabs)
-t_ignore = ' \t'
-t_ignore_COMMENT = r'\#.*'
-# Error handling rule
+
+# zasada obsługująca błędy
 def t_error(t):
     print("Illegal character '%s'" % t.value[0])
     t.lexer.skip(1)
