@@ -57,7 +57,7 @@ tokens = [
     # liczby całkowite
             'INTNUM',
     # liczby zmiennoprzecinkowe      
-            'FLOATNUM',       
+            'FLOATNUM',
     # stringi
             'STRING',
          ] + list(reserved.values())
@@ -113,8 +113,8 @@ def t_ID(t):
 
 #liczby zmiennoprzecinkowe
 def t_FLOATNUM(t):
-    r'(-)?\d+\.\d+'
-    t.value = float(t.value)
+    r'\d*\.\d+|\d+\.\d*'
+    t.value = float('0' + t.value + '0')
     return t
 
 # liczby całkowite
@@ -124,8 +124,8 @@ def t_INTNUM(t):
     return t
 # stringi
 def t_STRING(t):
-    r'".*"'
-    t.value = t.value[1:len(t.value) - 2]
+    r'"[^"]*"'
+    t.value = t.value[1:len(t.value) - 1]
     return t
 
 
@@ -140,4 +140,3 @@ def t_error(t):
     print("Illegal character '%s'" % t.value[0])
     t.lexer.skip(1)
 
- 
