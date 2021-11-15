@@ -125,7 +125,7 @@ def t_INTNUM(t):
 # stringi
 def t_STRING(t):
     r'".*"'
-    t.value = t.value[1:len(t.value) - 2]
+    t.value = t.value[1:len(t.value) - 1]
     return t
 
 
