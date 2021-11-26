@@ -1,7 +1,6 @@
 import sys
 from lexer import Lexer
-from my_parser import Parser
-
+import my_parser
 
 #
 # args = sys.argv[1:]
@@ -18,19 +17,14 @@ from my_parser import Parser
 #     exit()
 
 
-data = '1.0 - 20. + 6 + 3.'
+data = '1.0 - 20. + 6 6 + 3.'
 
-
-
-lexer =  Lexer()
+lexer = Lexer()
 lexer.tokenize(data)
 
 tokens = lexer.getTokens()
 
 print(tokens)
 
-parser = Parser()
-
-
-our_parser = parser.parse()
+our_parser = my_parser.build_parser()
 our_parser.parse(data, lexer.lexer)
