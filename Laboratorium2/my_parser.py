@@ -107,6 +107,22 @@ def build_parser():
                                | MULASSIGN
                                | DIVASSIGN"""
 
+    def p_matrix(p):
+        """matrix : SQUAREOPEN matrix_body SQUARECLOSE
+                  | SQUAREOPEN SQUARECLOSE"""
+
+    def p_matrix_body(p):
+        """matrix_body : vector
+                       | matrix_body COMMA vector"""
+
+    def p_vector(p):
+        """vector : SQUAREOPEN vector_body SQUARECLOSE
+                  | SQUAREOPEN SQUARECLOSE"""
+
+    def p_vector_body(p):
+        """vector_body : numeric_expression
+                       | vector_body COMMA numeric_expression"""
+
     def p_expression(p):
         """expression : comparison_expression
                     | numeric_expression
@@ -183,22 +199,6 @@ def build_parser():
         """var : ID
                | var SQUAREOPEN fun_body SQUARECLOSE
                """
-
-    def p_matrix(p):
-        """matrix : SQUAREOPEN matrix_body SQUARECLOSE
-                  | SQUAREOPEN SQUARECLOSE"""
-
-    def p_matrix_body(p):
-        """matrix_body : vector
-                       | matrix_body COMMA vector"""
-
-    def p_vector(p):
-        """vector : SQUAREOPEN vector_body SQUARECLOSE
-                  | SQUAREOPEN SQUARECLOSE"""
-
-    def p_vector_body(p):
-        """vector_body : numeric_expression
-                       | vector_body COMMA numeric_expression"""
 
     # Error rule for syntax errors
     def p_error(p):
