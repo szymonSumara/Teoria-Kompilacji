@@ -113,7 +113,7 @@ def t_ID(t):
 
 #liczby zmiennoprzecinkowe
 def t_FLOATNUM(t):
-    r'\d*\.\d+|\d+\.\d*'
+    r'(\d*\.\d+E\d+)|(\d+\.\d*E\d*\.\d+)|(\d*\.\d+)|(\d+\.\d*)'
     t.value = float('0' + t.value + '0')
     return t
 
