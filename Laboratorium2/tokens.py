@@ -60,9 +60,6 @@ tokens = [
             'FLOATNUM',
     # stringi
             'STRING',
-
-    # uzywane przez parser
-            'IFX'
          ] + list(reserved.values())
 
 
