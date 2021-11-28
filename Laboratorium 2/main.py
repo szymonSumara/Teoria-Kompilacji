@@ -125,11 +125,24 @@ x = 2;
 y = 2.5;
 """
 
-data5 = 'C = -A;'
+data5 = '''
+a "hello" +"world"
+.56
+
+109.
+
+80.10000
+
+-34.43E2
+-34.43E-12
+
+.90E-32
+
+'''
 
 
 lexer = Lexer()
-lexer.tokenize(data3)
+lexer.tokenize(data5)
 
 tokens = lexer.getTokens()
 

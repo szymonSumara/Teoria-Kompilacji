@@ -113,8 +113,13 @@ def t_ID(t):
 
 #liczby zmiennoprzecinkowe
 def t_FLOATNUM(t):
-    r'(\d*\.\d+E\d+)|(\d+\.\d*E\d*\.\d+)|(\d*\.\d+)|(\d+\.\d*)'
-    t.value = float('0' + t.value + '0')
+    r'-?((\d*\.\d+E-?\d+)|(\d+\.\d*E-?\d+)|(\d*\.\d+)|(\d+\.\d*))'
+
+    if t.value[0] == '-':
+        t.value = float(t.value[1:])
+        t.value *=-1
+    else:
+        t.value = float( t.value)
     return t
 
 # liczby całkowite
