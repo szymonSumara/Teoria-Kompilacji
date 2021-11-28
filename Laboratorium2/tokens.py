@@ -39,12 +39,12 @@ tokens = [
             'EQ',
             'NEQ',
     # nawiasy: (,), [,], {,}
-            'ROUNDBRACKETSOPEN',
-            'ROUNDBRACKETSCLOSE',
-            'SQUAREBRACKETSOPEN',
-            'SQUAREBRACKETSCLOSE',
-            'CURLYBRACKETSOPEN',
-            'CURLYBRACKETSCLOSE',
+            'ROUNDOPEN',
+            'ROUNDCLOSE',
+            'SQUAREOPEN',
+            'SQUARECLOSE',
+            'CURLYOPEN',
+            'CURLYCLOSE',
     # operator zakresu: :
             'RANGE',
     # transpozycja macierzy: '
@@ -87,12 +87,12 @@ t_LE = r'\>\='
 t_EQ = r'\=\='
 t_NEQ = r'\!\='
 # nawiasy: (,), [,], {,}
-t_ROUNDBRACKETSOPEN = r'\('
-t_ROUNDBRACKETSCLOSE = r'\)'
-t_SQUAREBRACKETSOPEN = r'\['
-t_SQUAREBRACKETSCLOSE = r'\]'
-t_CURLYBRACKETSOPEN = r'\{'
-t_CURLYBRACKETSCLOSE = r'\}'
+t_ROUNDOPEN = r'\('
+t_ROUNDCLOSE = r'\)'
+t_SQUAREOPEN = r'\['
+t_SQUARECLOSE = r'\]'
+t_CURLYOPEN = r'\{'
+t_CURLYCLOSE = r'\}'
 # operator zakresu: :
 t_RANGE = r'\:' 
 # transpozycja macierzy ': 
