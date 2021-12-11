@@ -1,4 +1,3 @@
-
 class Node(object):
     pass
 
@@ -11,7 +10,6 @@ class Function(Node):
 
 class FunctionBody(Node):
     def __init__(self, argument, next_argument=None):
-        print(argument)
         self.argument = argument
         self.next_argument = next_argument
 
@@ -28,11 +26,17 @@ class FlowKeyword(Node):
 
 
 class For(Node):
-    def __init__(self, id, e1, e2, instructions):
+    def __init__(self, id, ne1, ne2, instruction):
         self.id = id
-        self.e1 = e1
-        self.e2 = e2
-        self.instructions = instructions
+        self.ne1 = ne1
+        self.ne2 = ne2
+        self.instruction = instruction
+
+
+class While(Node):
+    def __init__(self, expression, instruction):
+        self.expression = expression
+        self.instruction = instruction
 
 
 class Assignment(Node):
@@ -49,13 +53,31 @@ class Expression(Node):
         self.right_side = right_side
 
 
+class Transposition(Node):
+    def __init__(self, factor):
+        self.factor = factor
+
+
+class UMinus(Node):
+    def __init__(self, factor):
+        self.factor = factor
+
+
 class Print(Node):
     def __init__(self, body):
         self.body = body
 
+
+class PrintBody(Node):
+    def __init__(self, argument, next_argument=None):
+        self.argument = argument
+        self.next_argument = next_argument
+
+
 class String(Node):
     def __init__(self, value):
         self.value = value
+
 
 class Integer(Node):
     def __init__(self, value):
@@ -98,6 +120,14 @@ class VectorBody(Node):
     def __init__(self, item, next_item=None):
         self.item = item
         self.next_item = next_item
+
+
+class If(Node):
+    def __init__(self, expression, instruction1, instruction2=None):
+        self.expression = expression
+        self.instruction1 = instruction1
+        self.instruction2 = instruction2
+
 
 # ...
 # fill out missing classes

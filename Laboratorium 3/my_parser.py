@@ -55,6 +55,7 @@ def build_parser():
     def p_block(p):
         """block : CURLYOPEN instructions CURLYCLOSE
                  | CURLYOPEN error CURLYCLOSE"""
+        p[0] = p[2]
 
     def p_print(p):
         """print : PRINT print_body"""
@@ -62,10 +63,13 @@ def build_parser():
 
     def p_print_body(p):
         """print_body : string
-                      | expression"""
-                     # | string COMMA print_body
-                    #  | expression COMMA print_body"""
-        p[0] = p[1]
+                      | expression
+                     | string COMMA print_body
+                     | expression COMMA print_body"""
+        if len(p) == 2:
+            p[0] = AST.PrintBody(p[1])
+        else:
+            p[0] = AST.PrintBody(p[1], p[3])
 
 
     def p_return(p):
@@ -79,14 +83,19 @@ def build_parser():
     def p_conditional(p):
         """conditional : IF ROUNDOPEN expression ROUNDCLOSE instruction %prec IFX
                        | IF ROUNDOPEN expression ROUNDCLOSE instruction ELSE instruction"""
+        if len(p) == 6:
+            p[0] = AST.If(p[3], p[5])
+        else:
+            p[0] = AST.If(p[3], p[5], p[7])
 
     def p_loop(p):
         """loop : while
                 | for"""
-        p[0]=p[1]
+        p[0] = p[1]
 
     def p_while(p):
         """while : WHILE ROUNDOPEN expression ROUNDCLOSE instruction"""
+        p[0] = AST.While(p[3], p[5])
 
     def p_for(p):
         """for : FOR ID ASSIGN numeric_expression RANGE numeric_expression instruction"""
@@ -210,15 +219,16 @@ def build_parser():
 
     def p_term_times(p):
         'term : term MUL factor'
-        p[0] = AST.Expression(p[1],p[2], p[3])
+        p[0] = AST.Expression(p[1], p[2], p[3])
 
     def p_term_div(p):
         'term : term DIV factor'
-        p[0] = AST.Expression(p[1],p[2], p[3])
+        p[0] = AST.Expression(p[1], p[2], p[3])
 
     def p_term_dot(p):
         """term : term DOTMUL factor
                 | term DOTDIV factor"""
+        p[0] = AST.Expression(p[1], p[2], p[3])
 
     def p_term_factor(p):
         """term : factor"""
@@ -239,17 +249,23 @@ def build_parser():
     def p_factor_expr(p):
         """factor : ROUNDOPEN numeric_expression ROUNDCLOSE
                 | unary_operator"""
-        # p[0] = p[2]
+        if len(p) == 3:
+            p[0] = p[2]
+        else:
+            p[0] = p[1]
 
     def p_unary_operator(p):
         """unary_operator : negation
                     | transposition"""
+        p[0] = p[1]
 
     def p_negation(p):
         """negation : SUB factor %prec UMINUS"""
+        p[0] = AST.UMinus(p[2])
 
     def p_transposition(p):
         r"""transposition : factor TRANSPOSITION"""
+        p[0] = AST.Transposition(p[1])
 
     def p_var(p):
         """var : ID

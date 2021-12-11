@@ -159,6 +159,41 @@ E1 = [ [ 1, 2, 3],
 A[1,3] = 0 ;
 '''
 
+
+data7 = """
+# assignment operators
+# binary operators
+# transposition
+
+D1 = A.+B' ; # add element-wise A with transpose of B
+D2 -= A.-B' ; # substract element-wise A with transpose of B
+D3 *= A.*B' ; # multiply element-wise A with transpose of B
+D4 /= A./B' ; # divide element-wise A with transpose of B
+"""
+
+data8 = """
+# control flow instruction
+
+N = 10;
+M = 20;
+for i = 1:N {
+    for j = i:M {
+        print i, j;
+    }
+}
+
+while(k>0) {
+    if(k<5)
+        i = 1;
+    else if(k<10)
+        i = 2;   
+    else
+        i = 3;
+    
+    k = k - 1;
+}
+"""
+
 lexer = Lexer()
 lexer.tokenize(data5)
 
@@ -167,6 +202,6 @@ tokens = lexer.getTokens()
 print(tokens)
 
 our_parser = my_parser.build_parser()
-ast = our_parser.parse(data6, lexer.lexer)
+ast = our_parser.parse(data8, lexer.lexer)
 print(ast)
 ast.printTree()
