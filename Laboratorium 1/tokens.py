@@ -39,12 +39,12 @@ tokens = [
             'EQ',
             'NEQ',
     # nawiasy: (,), [,], {,}
-            'ROUNDBRACKETSOPEN',
-            'ROUNDBRACKETSCLOSE',
-            'SQUAREBRACKETSOPEN',
-            'SQUAREBRACKETSCLOSE',
-            'CURLYBRACKETSOPEN',
-            'CURLYBRACKETSCLOSE',
+            'ROUNDOPEN',
+            'ROUNDCLOSE',
+            'SQUAREOPEN',
+            'SQUARECLOSE',
+            'CURLYOPEN',
+            'CURLYCLOSE',
     # operator zakresu: :
             'RANGE',
     # transpozycja macierzy: '
@@ -52,11 +52,11 @@ tokens = [
     # przecinek i średnik: , ;
             'COMMA',
             'SEMICOLON',
-    # identyfikatory (pierwszy znak identyfikatora to litera lub znak _, w kolejnych znakach mogą dodatkowo wystąpić cyfry)      
+    # identyfikatory (pierwszy znak identyfikatora to litera lub znak _, w kolejnych znakach mogą dodatkowo wystąpić cyfry)
             'ID',
     # liczby całkowite
             'INTNUM',
-    # liczby zmiennoprzecinkowe      
+    # liczby zmiennoprzecinkowe
             'FLOATNUM',
     # stringi
             'STRING',
@@ -79,7 +79,7 @@ t_SUBASSIGN = r'\-\='
 t_MULASSIGN = r'\*\='
 t_ADDASSIGN = r'\+\='
 t_DIVASSIGN = r'\/\='
-# operatory relacyjne: <, >, <=, >=, !=, == 
+# operatory relacyjne: <, >, <=, >=, !=, ==
 t_G = r'\<'
 t_L = r'\>'
 t_GE = r'\<\='
@@ -87,25 +87,25 @@ t_LE = r'\>\='
 t_EQ = r'\=\='
 t_NEQ = r'\!\='
 # nawiasy: (,), [,], {,}
-t_ROUNDBRACKETSOPEN = r'\('
-t_ROUNDBRACKETSCLOSE = r'\)'
-t_SQUAREBRACKETSOPEN = r'\['
-t_SQUAREBRACKETSCLOSE = r'\]'
-t_CURLYBRACKETSOPEN = r'\{'
-t_CURLYBRACKETSCLOSE = r'\}'
+t_ROUNDOPEN = r'\('
+t_ROUNDCLOSE = r'\)'
+t_SQUAREOPEN = r'\['
+t_SQUARECLOSE = r'\]'
+t_CURLYOPEN = r'\{'
+t_CURLYCLOSE = r'\}'
 # operator zakresu: :
-t_RANGE = r'\:' 
-# transpozycja macierzy ': 
-t_TRANSPOSITION = r'\''  
+t_RANGE = r'\:'
+# transpozycja macierzy ':
+t_TRANSPOSITION = r'\''
 # przecinek i średnik: ,  ;
-t_COMMA = r'\,' 
+t_COMMA = r'\,'
 t_SEMICOLON = r'\;'
 
 # string zawierający ignorowane znaki (spacje i taby)
 t_ignore = ' \t'
 t_ignore_COMMENT = r'\#.*'
 
-# identyfikatory (pierwszy znak identyfikatora to litera lub znak _, w kolejnych znakach mogą dodatkowo wystąpić cyfry)     
+# identyfikatory (pierwszy znak identyfikatora to litera lub znak _, w kolejnych znakach mogą dodatkowo wystąpić cyfry)
 def t_ID(t):
     r'[a-zA-Z_][a-zA-Z_0-9]*'
     t.type = reserved.get(t.value, 'ID')  # Check for reserved words
@@ -113,8 +113,13 @@ def t_ID(t):
 
 #liczby zmiennoprzecinkowe
 def t_FLOATNUM(t):
-    r'\d*\.\d+|\d+\.\d*'
-    t.value = float('0' + t.value + '0')
+    r'-?((\d*\.\d+E-?\d+)|(\d+\.\d*E-?\d+)|(\d*\.\d+)|(\d+\.\d*))'
+
+    if t.value[0] == '-':
+        t.value = float(t.value[1:])
+        t.value *=-1
+    else:
+        t.value = float( t.value)
     return t
 
 # liczby całkowite

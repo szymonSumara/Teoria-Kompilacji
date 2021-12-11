@@ -15,7 +15,7 @@ class Lexer:
         token = self.lexer.token()
         
         while token :
-            token = self.tokenToStr(token)
+            #token = self.tokenToStr(token)
             self.tokens.append(token)
             token = self.lexer.token()
 
