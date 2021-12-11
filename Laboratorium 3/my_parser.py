@@ -28,10 +28,8 @@ def build_parser():
                         | instruction instructions"""
         if(len(p) <= 2):
             p[0] = AST.Instructions(p[1])
-            print("1" ,len(p),p, p[0], p[1])
         else:
             p[0] = AST.Instructions(p[1],p[2])
-            print("1", len(p), p, p[0], p[1], p[2])
 
     def p_instruction(p):
         """instruction : block
@@ -97,23 +95,35 @@ def build_parser():
     def p_fun(p):
         """fun : fun_name ROUNDOPEN fun_body ROUNDCLOSE
                | fun_name ROUNDOPEN error ROUNDCLOSE"""
+        p[0] = AST.Function(p[1], p[3])
 
     def p_fun_body(p):
         """fun_body : numeric_expression
                     | numeric_expression COMMA fun_body"""
 
+        if(len(p) <= 2):
+            p[0] = AST.FunctionBody(p[1])
+        else:
+            p[0] = AST.FunctionBody(p[1], p[3])
+
+
     def p_fun_name(p):
         """fun_name : ZEROS
                     | ONES
                     | EYE"""
+        p[0] = p[1]
 
     def p_assignment(p):
         """assignment : assignment_left_side assignment_operator expression
                       | assignment_left_side ASSIGN string
                       | assignment_left_side ASSIGN matrix"""
+        p[0] = AST.Assignment(p[1], p[2], p[3])
+
+
 
     def p_assignment_left_side(p):
         """assignment_left_side : var"""
+        p[0] = p[1]
 
     def p_assignment_operator(p):
         """assignment_operator : ASSIGN
@@ -121,27 +131,48 @@ def build_parser():
                                | SUBASSIGN
                                | MULASSIGN
                                | DIVASSIGN"""
+        p[0] = p[1]
 
     def p_matrix(p):
         """matrix : SQUAREOPEN matrix_body SQUARECLOSE
                   | SQUAREOPEN SQUARECLOSE"""
 
+        if len(p) <= 2:
+            p[0] = AST.Matrix()
+        else:
+            p[0] = AST.Matrix(p[2])
+
+
     def p_matrix_body(p):
         """matrix_body : vector
-                       | matrix_body COMMA vector"""
+                       | vector  COMMA matrix_body"""
+        if len(p) <= 2:
+            p[0] = AST.MatrixBody(p[1])
+        else:
+            p[0] = AST.MatrixBody(p[1], p[3])
 
     def p_vector(p):
         """vector : SQUAREOPEN vector_body SQUARECLOSE
                   | SQUAREOPEN SQUARECLOSE"""
 
+        if len(p) < 3:
+            p[0] = AST.Vector()
+        else:
+            p[0] = AST.Vector(p[2])
+
     def p_vector_body(p):
         """vector_body : numeric_expression
-                       | vector_body COMMA numeric_expression"""
+                       | numeric_expression COMMA  vector_body"""
+        if len(p) <= 2:
+            p[0] = AST.VectorBody(p[1])
+        else:
+            p[0] = AST.VectorBody(p[1], p[3])
 
     def p_expression(p):
         """expression : comparison_expression
                     | numeric_expression
                     | fun"""
+        p[0] = p[1]
 
     def p_comparison_expression(p):
         """comparison_expression : numeric_expression L numeric_expression
@@ -151,31 +182,39 @@ def build_parser():
                | numeric_expression GE numeric_expression
                | numeric_expression LE numeric_expression
                | ROUNDOPEN comparison_expression ROUNDCLOSE"""
+        p[0] = AST.Expression(p[1], p[2], p[3])
+
+
+
+
 
     def p_expression_plus(p):
         'numeric_expression : numeric_expression ADD term'
-        # p[0] = p[1] + p[3]
+        p[0] = AST.Expression(p[1], p[2], p[3])
 
 
     def p_expression_minus(p):
         'numeric_expression : numeric_expression SUB term'
-        # p[0] = p[1] - p[3]
+        p[0] = AST.Expression(p[1], p[2], p[3])
+
 
     def p_expression_dot(p):
         """numeric_expression : numeric_expression DOTADD term
                             | numeric_expression DOTSUB term"""
+        p[0] = AST.Expression(p[1], p[2], p[3])
 
     def p_expression_term(p):
         'numeric_expression : term'
         p[0] = p[1]
+        print(p[1])
 
     def p_term_times(p):
         'term : term MUL factor'
-        # p[0] = p[1] * p[3]
+        p[0] = AST.Expression(p[1],p[2], p[3])
 
     def p_term_div(p):
         'term : term DIV factor'
-        # p[0] = p[1] / p[3]
+        p[0] = AST.Expression(p[1],p[2], p[3])
 
     def p_term_dot(p):
         """term : term DOTMUL factor
@@ -187,14 +226,15 @@ def build_parser():
 
     def p_factor_floatnum(p):
         'factor : FLOATNUM'
-        p[0] = p[1]
+        p[0] = AST.Float(p[1])
 
     def p_factor_intnum(p):
         'factor : INTNUM'
-        p[0] = p[1]
+        p[0] = AST.Integer(p[1])
 
     def p_factor_var(p):
         """factor : var"""
+        p[0]= p[1]
 
     def p_factor_expr(p):
         """factor : ROUNDOPEN numeric_expression ROUNDCLOSE
@@ -215,7 +255,10 @@ def build_parser():
         """var : ID
                | var SQUAREOPEN fun_body SQUARECLOSE
                """
-
+        if len(p) <= 2:
+            p[0] = AST.Id(p[1])
+        else:
+            p[0] = AST.Range(p[1], p[3])
     # Error rule for syntax errors
     def p_error(p):
         if p:
