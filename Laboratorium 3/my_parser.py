@@ -26,13 +26,20 @@ def build_parser():
     def p_instructions(p):
         """instructions : instruction
                         | instruction instructions"""
-        p[0] = AST.Program(p[1])
+        if(len(p) <= 2):
+            p[0] = AST.Instructions(p[1])
+            print("1" ,len(p),p, p[0], p[1])
+        else:
+            p[0] = AST.Instructions(p[1],p[2])
+            print("1", len(p), p, p[0], p[1], p[2])
+
     def p_instruction(p):
         """instruction : block
                        | conditional
                        | loop
                        | statement SEMICOLON
                        | error SEMICOLON"""
+        p[0] = p[1]
 
     def p_statement(p):
         """statement : assignment
@@ -40,10 +47,12 @@ def build_parser():
                      | fun
                      | return
                      | print"""
+        p[0] = p[1]
 
     def p_flow_keyword(p):
         """flow_keyword : BREAK
                         | CONTINUE"""
+        p[0] = AST.FlowKeyword(p[1])
 
     def p_block(p):
         """block : CURLYOPEN instructions CURLYCLOSE
@@ -51,12 +60,15 @@ def build_parser():
 
     def p_print(p):
         """print : PRINT print_body"""
+        p[0] = AST.Print(p[2])
 
     def p_print_body(p):
         """print_body : string
-                      | expression
-                      | string COMMA print_body
-                      | expression COMMA print_body"""
+                      | expression"""
+                     # | string COMMA print_body
+                    #  | expression COMMA print_body"""
+        p[0] = p[1]
+
 
     def p_return(p):
         """return : RETURN expression
@@ -64,6 +76,7 @@ def build_parser():
 
     def p_string(p):
         """string : STRING"""
+        p[0] = AST.String(p[1])
 
     def p_conditional(p):
         """conditional : IF ROUNDOPEN expression ROUNDCLOSE instruction %prec IFX
@@ -72,12 +85,14 @@ def build_parser():
     def p_loop(p):
         """loop : while
                 | for"""
+        p[0]=p[1]
 
     def p_while(p):
         """while : WHILE ROUNDOPEN expression ROUNDCLOSE instruction"""
 
     def p_for(p):
         """for : FOR ID ASSIGN numeric_expression RANGE numeric_expression instruction"""
+        p[0] = AST.For(p[2], p[4], p[6], p[7])
 
     def p_fun(p):
         """fun : fun_name ROUNDOPEN fun_body ROUNDCLOSE
@@ -141,6 +156,7 @@ def build_parser():
         'numeric_expression : numeric_expression ADD term'
         # p[0] = p[1] + p[3]
 
+
     def p_expression_minus(p):
         'numeric_expression : numeric_expression SUB term'
         # p[0] = p[1] - p[3]
@@ -151,7 +167,7 @@ def build_parser():
 
     def p_expression_term(p):
         'numeric_expression : term'
-        # p[0] = p[1]
+        p[0] = p[1]
 
     def p_term_times(p):
         'term : term MUL factor'
@@ -167,15 +183,15 @@ def build_parser():
 
     def p_term_factor(p):
         """term : factor"""
-        # p[0] = p[1]
+        p[0] = p[1]
 
     def p_factor_floatnum(p):
         'factor : FLOATNUM'
-        # p[0] = p[1]
+        p[0] = p[1]
 
     def p_factor_intnum(p):
         'factor : INTNUM'
-        # p[0] = p[1]
+        p[0] = p[1]
 
     def p_factor_var(p):
         """factor : var"""

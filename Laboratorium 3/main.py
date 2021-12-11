@@ -1,7 +1,7 @@
 import sys
 from lexer import Lexer
 import my_parser
-
+from TreePrinter import TreePrinter
 #
 # args = sys.argv[1:]
 #
@@ -126,11 +126,11 @@ y = 2.5;
 """
 
 data5 = '''
-A = zeros(5); # create 5x5 matrix filled with zeros
-D = A.+B' ;   # add element-wise A with transpose of B
-
 for j = 1:10 
-    print j;
+    print "j";
+    
+for k = 2:7 
+    print "k";
 '''
 
 
@@ -142,5 +142,6 @@ tokens = lexer.getTokens()
 print(tokens)
 
 our_parser = my_parser.build_parser()
-res = our_parser.parse(data3, lexer.lexer)
-print(res)
+ast = our_parser.parse(data5, lexer.lexer)
+print(ast)
+ast.printTree()
