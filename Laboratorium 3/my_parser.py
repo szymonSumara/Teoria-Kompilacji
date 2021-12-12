@@ -75,6 +75,10 @@ def build_parser():
     def p_return(p):
         """return : RETURN expression
                 | RETURN"""
+        if len(p) > 2:
+            p[0] = AST.Return(p[2])
+        else:
+            p[0] = AST.Return()
 
     def p_string(p):
         """string : STRING"""

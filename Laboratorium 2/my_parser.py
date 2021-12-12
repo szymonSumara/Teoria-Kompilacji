@@ -10,11 +10,12 @@ def build_parser():
         # to fill ...
         ("nonassoc", 'IFX'),
         ('nonassoc', 'ELSE'),
+        # ('right', 'ASSIGN', 'ADDASSIGN', 'SUBASSIGN', 'MULASSIGN', 'DIVASSIGN'),
         ('nonassoc', 'L', 'G', 'LE', 'GE', 'NEQ', 'EQ'),
-        ('right', 'ASSIGN', 'ADDASSIGN', 'SUBASSIGN', 'MULASSIGN', 'DIVASSIGN'),
+
         ("left", 'ADD', 'SUB'),
-        ('left', 'MUL', 'DIV'),
         ('left', 'DOTADD', 'DOTSUB'),
+        ('left', 'MUL', 'DIV'),
         ('left', 'DOTMUL', 'DOTDIV'),
         ('right', 'UMINUS'),
         ('right', 'TRANSPOSITION'),
@@ -80,12 +81,12 @@ def build_parser():
         """for : FOR ID ASSIGN numeric_expression RANGE numeric_expression instruction"""
 
     def p_fun(p):
-        """fun : fun_name ROUNDOPEN fun_body ROUNDCLOSE
+        """fun : fun_name ROUNDOPEN fun_args ROUNDCLOSE
                | fun_name ROUNDOPEN error ROUNDCLOSE"""
 
-    def p_fun_body(p):
-        """fun_body : numeric_expression
-                    | numeric_expression COMMA fun_body"""
+    def p_fun_args(p):
+        """fun_args : numeric_expression
+                    | numeric_expression COMMA fun_args"""
 
     def p_fun_name(p):
         """fun_name : ZEROS
@@ -126,7 +127,8 @@ def build_parser():
     def p_expression(p):
         """expression : comparison_expression
                     | numeric_expression
-                    | fun"""
+                    | fun
+                    """
 
     def p_comparison_expression(p):
         """comparison_expression : numeric_expression L numeric_expression
@@ -139,11 +141,9 @@ def build_parser():
 
     def p_expression_plus(p):
         'numeric_expression : numeric_expression ADD term'
-        # p[0] = p[1] + p[3]
 
     def p_expression_minus(p):
         'numeric_expression : numeric_expression SUB term'
-        # p[0] = p[1] - p[3]
 
     def p_expression_dot(p):
         """numeric_expression : numeric_expression DOTADD term
@@ -151,15 +151,12 @@ def build_parser():
 
     def p_expression_term(p):
         'numeric_expression : term'
-        # p[0] = p[1]
 
     def p_term_times(p):
         'term : term MUL factor'
-        # p[0] = p[1] * p[3]
 
     def p_term_div(p):
         'term : term DIV factor'
-        # p[0] = p[1] / p[3]
 
     def p_term_dot(p):
         """term : term DOTMUL factor
@@ -167,15 +164,12 @@ def build_parser():
 
     def p_term_factor(p):
         """term : factor"""
-        # p[0] = p[1]
 
     def p_factor_floatnum(p):
         'factor : FLOATNUM'
-        # p[0] = p[1]
 
     def p_factor_intnum(p):
         'factor : INTNUM'
-        # p[0] = p[1]
 
     def p_factor_var(p):
         """factor : var"""
@@ -183,7 +177,6 @@ def build_parser():
     def p_factor_expr(p):
         """factor : ROUNDOPEN numeric_expression ROUNDCLOSE
                 | unary_operator"""
-        # p[0] = p[2]
 
     def p_unary_operator(p):
         """unary_operator : negation
@@ -197,7 +190,7 @@ def build_parser():
 
     def p_var(p):
         """var : ID
-               | var SQUAREOPEN fun_body SQUARECLOSE
+               | ID SQUAREOPEN fun_args SQUARECLOSE
                """
 
     # Error rule for syntax errors

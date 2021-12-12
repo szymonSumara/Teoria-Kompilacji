@@ -126,23 +126,40 @@ y = 2.5;
 """
 
 data5 = '''
-a "hello" +"world"
-.56
+A = zeros(5);  # create 5x5 matrix filled with zeros
+B = ones(7);   # create 7x7 matrix filled with ones
+I = eye(10);   # create 10x10 matrix filled with ones on diagonal and zeros elsewhere
+D1 = A.+B' ; # add element-wise A with transpose of B
+D2 -= A.-B' ; # substract element-wise A with transpose of B
+D3 *= A.*B' ; # multiply element-wise A with transpose of B
+D4 /= A./B' ; # divide element-wise A with transpose of B
 
-109.
+E1 = [ [ 1, 2, 3],
+       [ 4, 5, 6],
+       [ 7, 8, 9] ];
 
-80.10000
+res1 = 60.500;
+res2 = 60.;
+res3 = .500;
 
--34.43E2
--34.43E-12
+str = "Hello world";
 
-.90E-32
+if (m==n) { 
+    if (m >= n) 
+        print res;
+}
+
 
 '''
 
 
+data6 = """
+res4 = 5-60.52E2;
+"""
+
+
 lexer = Lexer()
-lexer.tokenize(data5)
+lexer.tokenize(data)
 
 tokens = lexer.getTokens()
 

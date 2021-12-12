@@ -69,7 +69,7 @@ class TreePrinter:
 
     @addToClass(AST.Print)
     def printTree(self, indent=0):
-        print("| " * indent + "Print")
+        print("| " * indent + "PRINT")
         self.body.printTree(indent=indent + 1)
 
     @addToClass(AST.PrintBody)
@@ -77,6 +77,12 @@ class TreePrinter:
         self.argument.printTree(indent)
         if self.next_argument:
             self.next_argument.printTree(indent)
+
+    @addToClass(AST.Return)
+    def printTree(self, indent=0):
+        print("| " * indent + "RETURN")
+        if self.instruction:
+            self.instruction.printTree(indent=indent + 1)
 
     @addToClass(AST.String)
     def printTree(self, indent=0):
@@ -96,7 +102,7 @@ class TreePrinter:
 
     @addToClass(AST.Matrix)
     def printTree(self, indent=0):
-        print("| " * indent + "Matrix")
+        print("| " * indent + "MATRIX")
         if self.body:
             self.body.printTree(indent + 1)
 
@@ -108,7 +114,7 @@ class TreePrinter:
 
     @addToClass(AST.Vector)
     def printTree(self, indent=0):
-        print("| " * indent + "Vector")
+        print("| " * indent + "VECTOR")
         if self.body:
             self.body.printTree(indent + 1)
 

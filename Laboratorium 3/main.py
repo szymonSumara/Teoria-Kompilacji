@@ -192,6 +192,9 @@ while(k>0) {
     
     k = k - 1;
 }
+
+
+return 10;
 """
 
 lexer = Lexer()

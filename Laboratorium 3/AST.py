@@ -129,6 +129,11 @@ class If(Node):
         self.instruction2 = instruction2
 
 
+class Return(Node):
+    def __init__(self, instruction=None):
+        self.instruction = instruction
+
+
 # ...
 # fill out missing classes
 # ...
