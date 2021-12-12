@@ -5,16 +5,20 @@ import ply.yacc as yacc
 from tokens import tokens
 import AST
 
+HAVE_ERRORS = False
+
 def build_parser():
+
     precedence = (
         # to fill ...
         ("nonassoc", 'IFX'),
         ('nonassoc', 'ELSE'),
+        # ('right', 'ASSIGN', 'ADDASSIGN', 'SUBASSIGN', 'MULASSIGN', 'DIVASSIGN'),
         ('nonassoc', 'L', 'G', 'LE', 'GE', 'NEQ', 'EQ'),
-        ('right', 'ASSIGN', 'ADDASSIGN', 'SUBASSIGN', 'MULASSIGN', 'DIVASSIGN'),
+
         ("left", 'ADD', 'SUB'),
-        ('left', 'MUL', 'DIV'),
         ('left', 'DOTADD', 'DOTSUB'),
+        ('left', 'MUL', 'DIV'),
         ('left', 'DOTMUL', 'DOTDIV'),
         ('right', 'UMINUS'),
         ('right', 'TRANSPOSITION'),
@@ -219,7 +223,6 @@ def build_parser():
     def p_expression_term(p):
         'numeric_expression : term'
         p[0] = p[1]
-        print(p[1])
 
     def p_term_times(p):
         'term : term MUL factor'
@@ -273,14 +276,18 @@ def build_parser():
 
     def p_var(p):
         """var : ID
-               | var SQUAREOPEN fun_body SQUARECLOSE
+               | ID SQUAREOPEN fun_body SQUARECLOSE
                """
         if len(p) <= 2:
             p[0] = AST.Id(p[1])
         else:
-            p[0] = AST.Range(p[1], p[3])
+            p[0] = AST.Range(AST.Id(p[1]), p[3])
     # Error rule for syntax errors
     def p_error(p):
+
+        global HAVE_ERRORS
+        HAVE_ERRORS = True
+
         if p:
             print("Syntax error at line {0}: LexToken({1}, '{2}')".format(p.lineno, p.type, p.value))
         else:

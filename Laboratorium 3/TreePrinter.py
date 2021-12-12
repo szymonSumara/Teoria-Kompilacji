@@ -61,6 +61,7 @@ class TreePrinter:
         print("| " * indent + "IF")
         self.expression.printTree(indent=indent + 1)
         print("| " * indent + "THEN")
+      # print(self.instruction1)
         self.instruction1.printTree(indent=indent + 1)
         if self.instruction2:
             print("| " * indent + "ELSE")
@@ -132,7 +133,7 @@ class TreePrinter:
 
     @addToClass(AST.FlowKeyword)
     def printTree(self, indent=0):
-        print("Flow")
+        print("| " * indent + self.value)
         # fill in the body
 
     @addToClass(AST.Expression)
