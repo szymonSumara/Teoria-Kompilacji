@@ -1,13 +1,16 @@
 import AST
-
 import SymbolTable
 
 from type_table import *
+
+# TODO scope - block Szymon
+# TODO range Szymon
 
 class NodeVisitor(object):
 
     def visit(self, node):
         method = 'visit_' + node.__class__.__name__
+        print(method)
         visitor = getattr(self, method, self.generic_visit)
         return visitor(node)
 
@@ -36,37 +39,54 @@ class TypeChecker(NodeVisitor):
 
 
     def __init__(self):
-        self.symbol_table = SymbolTable.SymbolTable(None, 'god why')
+        self.symbol_table = SymbolTable(None, 'god why')
 
     def visit_Expression(self, node):
+
+        print('visit Expression')
                                           # alternative usage,
                                           # requires definition of accept method in class Node
-        symbol1 = self.visit(node.left)     # type1 = node.left.accept(self)
-        symbol2 = self.visit(node.right)    # type2 = node.right.accept(self)
-        op    = node.op
+        symbol1 = self.visit(node.left_side)     # type1 = node.left.accept(self)
+        symbol2 = self.visit(node.right_side)    # type2 = node.right.accept(self)
+        op    = node.operator
 
-        result_symbol = get_new_symbol(op, symbol1.type, symbol2.type)
+        result_symbol = get_new_symbol(op, symbol1, symbol2)
         if result_symbol is None:
             print("Type error in line {}".format('x'))
         return result_symbol
 
 
-    def visit_Assigment(self, node):
+    def visit_Assignment(self, node):
+
+        print(node.value)
 
         ex_symbol = self.visit(node.value)
 
+        print('tu cos powinno byc ' , node.assignment)
+
         if node.assignment == '=':
-            self.symbol_table.put(node.left_side, ex_symbol)
+            self.symbol_table.put(node.left_side.name, ex_symbol)
 
 
     def visit_Integer(self, node):
+        print('visit Integer')
         return VariableSymbol('why does this exist', 'int')
 
     def visit_Float(self, node):
         return VariableSymbol('why does this exist', 'float')
- 
 
-    def visit_Var(self, node):
+    def visit_Vector(self, node):
+        types = []
+        for val in node.body:
+            types.append(self.visit(val).type)
+        # TODO funkcja dajacy typ wektora Jakub
+        return VectorSymbol('whyyyyyyy', 'int', len(node.body))
+
+
+    # TODO visit matrix rozmiar, typ Jakub
+
+    def visit_Id(self, node):
+        print('visit Id')
         tmp = self.symbol_table.get(node.name)
         if tmp is None:
             print("super error")

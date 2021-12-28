@@ -39,7 +39,7 @@ def build_parser():
             p[0] = AST.Instructions(p[1])
         else:
             print(p[1], p[2])
-            p[2].children.append(p[1])
+            p[2].children.insert(0, p[1])
             p[0] = p[2]
 
     def p_instruction(p):
@@ -66,7 +66,7 @@ def build_parser():
     def p_block(p):
         """block : CURLYOPEN instructions CURLYCLOSE
                  | CURLYOPEN error CURLYCLOSE"""
-        p[0] = p[2]
+        p[0] = p[2]     # TODO AST.Block Szymon
 
     def p_print(p):
         """print : PRINT print_body"""
@@ -140,7 +140,8 @@ def build_parser():
     def p_assignment(p):
         """assignment : assignment_left_side assignment_operator expression
                       | assignment_left_side ASSIGN string
-                      | assignment_left_side ASSIGN matrix"""
+                      | assignment_left_side ASSIGN matrix
+                      | assignment_left_side ASSIGN vector"""
         p[0] = AST.Assignment(p[1], p[2], p[3])
 
 
@@ -158,13 +159,9 @@ def build_parser():
         p[0] = p[1]
 
     def p_matrix(p):
-        """matrix : SQUAREOPEN matrix_body SQUARECLOSE
-                  | SQUAREOPEN SQUARECLOSE"""
+        """matrix : SQUAREOPEN matrix_body SQUARECLOSE"""
 
-        if len(p) <= 2:
-            p[0] = AST.Matrix()
-        else:
-            p[0] = AST.Matrix(p[2])
+        p[0] = AST.Matrix(p[2])
 
 
     def p_matrix_body(p):
@@ -188,9 +185,10 @@ def build_parser():
         """vector_body : numeric_expression
                        | numeric_expression COMMA  vector_body"""
         if len(p) <= 2:
-            p[0] = AST.VectorBody(p[1])
+            p[0] = [p[1]]
         else:
-            p[0] = AST.VectorBody(p[1], p[3])
+            p[3].insert(0, p[1])
+            p[0] = p[3]
 
     def p_expression(p):
         """expression : comparison_expression

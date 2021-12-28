@@ -2,6 +2,9 @@ class Node(object):
     pass
 
 
+# TODO numery lini szymon
+
+
 class Function(Node):
     def __init__(self, fun_name, fun_body):
         self.fun_name = fun_name
@@ -15,12 +18,8 @@ class FunctionBody(Node):
 
 
 class Instructions(Node):
-    def __init__(self, instruction, instructions=None):
-        self.instruction = instruction
-        self.instructions = instructions
+    def __init__(self, instruction):
         self.children = [instruction]
-        if instructions:
-            self.children.append(instructions)
 
 
 class FlowKeyword(Node):
@@ -89,7 +88,7 @@ class Integer(Node):
 
 class Id(Node):
     def __init__(self, value):
-        self.value = value
+        self.name = value
 
 
 class Float(Node):
@@ -115,14 +114,8 @@ class Range(Node):
 
 
 class Vector(Node):
-    def __init__(self, body=None):
+    def __init__(self, body=[]):
         self.body = body
-
-
-class VectorBody(Node):
-    def __init__(self, item, next_item=None):
-        self.item = item
-        self.next_item = next_item
 
 
 class If(Node):

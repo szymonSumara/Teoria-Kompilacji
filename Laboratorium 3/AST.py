@@ -91,7 +91,7 @@ class Integer(Node):
 
 class Id(Node):
     def __init__(self, name):
-        self.name = name
+        self.value = name
 
 
 class Float(Node):

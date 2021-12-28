@@ -13,10 +13,12 @@ type_table['+']['int']['float'] = 'float'
 type_table['+']['float']['int'] = 'float'
 type_table['+']['float']['float'] = 'float'
 
+#TODO to ^ jakub
+
 
 def get_new_symbol(op, left, right):
     if type(left) != type(right):
-        print("error")
+        return None
 
     if isinstance(left, VectorSymbol):
         if op == '+' or op == '-':
@@ -24,9 +26,9 @@ def get_new_symbol(op, left, right):
                 new_type = check_type(op, left.type, right.type)
                 if new_type:
                     return VectorSymbol('xd?', new_type, left.size)
-        return None         # TODO dodać klase error
+        return None         # TODO dodać klase error Jakub
 
-    if isinstance(left, MatrixSymbol):
+    if isinstance(left, MatrixSymbol): # TODO macierz Jakub
         return None
 
     if isinstance(left, VariableSymbol):
