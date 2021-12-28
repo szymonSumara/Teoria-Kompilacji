@@ -3,6 +3,7 @@ from lexer import Lexer
 import my_parser
 from TreePrinter import TreePrinter
 from TypeChecker import TypeChecker
+from Interpreter import Interpreter
 
 if __name__ == '__main__':
 
@@ -22,3 +23,5 @@ if __name__ == '__main__':
     # Below code shows how to use visitor
     typeChecker = TypeChecker()
     typeChecker.visit(ast)  # or alternatively ast.accept(typeChecker)
+
+    ast.accept(Interpreter())
