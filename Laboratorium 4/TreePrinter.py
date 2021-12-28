@@ -18,9 +18,8 @@ class TreePrinter:
 
     @addToClass(AST.Instructions)
     def printTree(self, indent=0):
-        self.instruction.printTree(indent)
-        if self.instructions:
-            self.instructions.printTree(indent)
+        for ins in self.children:
+            ins.printTree(indent)
 
     @addToClass(AST.Assignment)
     def printTree(self, indent=0):
@@ -91,7 +90,7 @@ class TreePrinter:
 
     @addToClass(AST.Id)
     def printTree(self, indent=0):
-        print("| " * indent + str(self.value))
+        print("| " * indent + str(self.name))
 
     @addToClass(AST.Integer)
     def printTree(self, indent=0):

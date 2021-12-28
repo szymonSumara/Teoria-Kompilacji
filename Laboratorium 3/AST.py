@@ -14,10 +14,15 @@ class FunctionBody(Node):
         self.next_argument = next_argument
 
 
+# class Instructions(Node):
+#     def __init__(self, instruction, instructions=None):
+#         self.instruction = instruction
+#         self.instructions = instructions
+
+
 class Instructions(Node):
-    def __init__(self, instruction, instructions=None):
-        self.instruction = instruction
-        self.instructions = instructions
+    def __init__(self, instruction):
+        self.children = [instruction]
 
 
 class FlowKeyword(Node):
@@ -85,8 +90,8 @@ class Integer(Node):
 
 
 class Id(Node):
-    def __init__(self, value):
-        self.value = value
+    def __init__(self, name):
+        self.name = name
 
 
 class Float(Node):

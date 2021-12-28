@@ -19,6 +19,6 @@ if __name__ == '__main__':
     if not my_parser.HAVE_ERRORS:
         ast.printTree()
 
-    # Below code shows how to use visitor
-    typeChecker = TypeChecker()
-    typeChecker.visit(ast)  # or alternatively ast.accept(typeChecker)
+    # # Below code shows how to use visitor
+    # typeChecker = TypeChecker()
+    # typeChecker.visit(ast)  # or alternatively ast.accept(typeChecker)

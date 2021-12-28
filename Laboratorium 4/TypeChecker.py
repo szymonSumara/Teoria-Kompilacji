@@ -1,5 +1,9 @@
 import AST
 
+import SymbolTable
+
+from type_table import *
+
 class NodeVisitor(object):
 
     def visit(self, node):
@@ -30,18 +34,43 @@ class NodeVisitor(object):
 
 class TypeChecker(NodeVisitor):
 
-    def visit_BinExpr(self, node):
+
+    def __init__(self):
+        self.symbol_table = SymbolTable.SymbolTable(None, 'god why')
+
+    def visit_Expression(self, node):
                                           # alternative usage,
                                           # requires definition of accept method in class Node
-        type1 = self.visit(node.left)     # type1 = node.left.accept(self) 
-        type2 = self.visit(node.right)    # type2 = node.right.accept(self)
+        symbol1 = self.visit(node.left)     # type1 = node.left.accept(self)
+        symbol2 = self.visit(node.right)    # type2 = node.right.accept(self)
         op    = node.op
-        # ... 
-        #
+
+        result_symbol = get_new_symbol(op, symbol1.type, symbol2.type)
+        if result_symbol is None:
+            print("Type error in line {}".format('x'))
+        return result_symbol
+
+
+    def visit_Assigment(self, node):
+
+        ex_symbol = self.visit(node.value)
+
+        if node.assignment == '=':
+            self.symbol_table.put(node.left_side, ex_symbol)
+
+
+    def visit_Integer(self, node):
+        return VariableSymbol('why does this exist', 'int')
+
+    def visit_Float(self, node):
+        return VariableSymbol('why does this exist', 'float')
  
 
-    def visit_Variable(self, node):
-        pass
+    def visit_Var(self, node):
+        tmp = self.symbol_table.get(node.name)
+        if tmp is None:
+            print("super error")
+        return tmp
         
 
 

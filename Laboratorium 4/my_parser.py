@@ -30,10 +30,17 @@ def build_parser():
     def p_instructions(p):
         """instructions : instruction
                         | instruction instructions"""
-        if(len(p) <= 2):
+        # if(len(p) <= 2):
+        #     p[0] = AST.Instructions(p[1])
+        # else:
+        #     p[0] = AST.Instructions(p[1], p[2])
+
+        if (len(p) <= 2):
             p[0] = AST.Instructions(p[1])
         else:
-            p[0] = AST.Instructions(p[1],p[2])
+            print(p[1], p[2])
+            p[2].children.append(p[1])
+            p[0] = p[2]
 
     def p_instruction(p):
         """instruction : block
@@ -199,10 +206,10 @@ def build_parser():
                | numeric_expression GE numeric_expression
                | numeric_expression LE numeric_expression
                | ROUNDOPEN comparison_expression ROUNDCLOSE"""
-        p[0] = AST.Expression(p[1], p[2], p[3])
-
-
-
+        if p[1] == '(':
+            p[0] = p[2]
+        else:
+            p[0] = AST.Expression(p[1], p[2], p[3])
 
 
     def p_expression_plus(p):
