@@ -125,79 +125,79 @@ def get_new_symbol(op, left, right):
     if isinstance(left, VectorSymbol):
         if op == '+' or op == '-':
             if type(left) != type(right):
-                return 'Can\'t {} Vector to {}'.format(op, type(right))
+                return 'Can\'t {} Vector to {}'.format(op, right.name)
             if left.size != right.size:
                 return 'Can\'t {} Vectors with sizes {} and {}'.format(op, left.size, right.size)
             new_type = check_type(op, left.type, right.type)
             if new_type:
-                return VectorSymbol('xd?', new_type, left.size)
+                return VectorSymbol('Vector', new_type, left.size)
             return 'Can\'t {} Vector of type {} to Vector of type {}'.format(op, left.type, right.type)
 
         if op == '.*' or op == './' or op == '.+' or op == '.-':
             if isinstance(right, VariableSymbol):
                 new_type = check_type(op[1], left.type, right.type)
                 if new_type:
-                    return VectorSymbol('xd?', new_type, left.size)
+                    return VectorSymbol('Vector', new_type, left.size)
                 return 'Can\'t {} Vector of type {} with Variable of type {}'.format(op, left.type, right.type)
-            return 'Can\'t {} Vector to {}'.format(op, type(right))
+            return 'Can\'t {} Vector to {}'.format(op, right.name)
 
-        return 'Can\'t {} Vector to {}'.format(op, type(right))
+        return 'Can\'t {} Vector to {}'.format(op, right.name)
 
     if isinstance(left, MatrixSymbol):
         if op == '+' or op == '-':
             if type(left) != type(right):
-                return 'Can\'t {} Matrix to {}'.format(op, type(right))
+                return 'Can\'t {} Matrix to {}'.format(op, right.name)
             if left.size != right.size:
                 return 'Can\'t {} Matrices with sizes {} and {}'.format(op, left.size, right.size)
             new_type = check_type(op, left.type, right.type)
             if new_type:
-                return MatrixSymbol('xd?', new_type, left.size)
+                return MatrixSymbol('Matrix', new_type, left.size)
             return 'Can\'t {} Matrix of type {} to Matrix of type {}'.format(op, left.type, right.type)
 
         if op == '.*' or op == './' or op == '.+' or op == '.-':
             if isinstance(right, VariableSymbol):
                 new_type = check_type(op[1], left.type, right.type)
                 if new_type:
-                    return MatrixSymbol('xd?', new_type, left.size)
+                    return MatrixSymbol('Matrix', new_type, left.size)
                 return 'Can\'t {} Matrix of type {} with Variable of type {}'.format(op, left.type, right.type)
             if isinstance(right, MatrixSymbol):
                 if left.size != right.size:
                     return 'Can\'t {} Matrices with sizes {} and {}'.format(op, left.size, right.size)
                 new_type = check_type(op[1], left.type, right.type)
                 if new_type:
-                    return MatrixSymbol('xd?', new_type, left.size)
+                    return MatrixSymbol('Matrix', new_type, left.size)
                 return 'Can\'t {} Matrix of type {} with Matrix of type {}'.format(op, left.type, right.type)
-            return 'Can\'t {} Matrix with {}'.format(op, type(right))
+            return 'Can\'t {} Matrix with {}'.format(op, right.name)
 
         if op == '*':
             if type(left) != type(right):
-                return 'Can\'t {} Matrix with {}'.format(op, type(right))
+                return 'Can\'t {} Matrix with {}'.format(op, right.name)
             if left.size[1] != right.size[0]:
                 return 'Can\'t {} Matrices with sizes {} and {}'.format(op, left.size, right.size)
             new_type = check_type(op, left.type, right.type)
             if new_type:
-                return MatrixSymbol('xd?', new_type, (left.size[0], right.size[1]))
+                return MatrixSymbol('Matrix', new_type, (left.size[0], right.size[1]))
             return 'Can\'t {} Matrix of type {} with Matrix of type {}'.format(op, left.type, right.type)
 
     if isinstance(left, VariableSymbol):
         if isinstance(right, VariableSymbol):
             new_type = check_type(op, left.type, right.type)
             if new_type:
-                return VariableSymbol('xd?', new_type)
+                return VariableSymbol('Variable', new_type)
             return 'Can\'t {} Variable of type {} with Variable of type {}'.format(op, left.type, right.type)
         if op == '.*' or op == './' or op == '.+' or op == '.-':
             if isinstance(right, VectorSymbol):
                 new_type = check_type(op[1], left.type, right.type)
                 if new_type:
-                    return VectorSymbol('xd?', new_type, right.size)
+                    return VectorSymbol('Variable', new_type, right.size)
                 return 'Can\'t {} Variable of type {} with Vector of type {}'.format(op, left.type, right.type)
             if isinstance(right, MatrixSymbol):
                 new_type = check_type(op[1], left.type, right.type)
                 if new_type:
-                    return MatrixSymbol('xd?', new_type, right.size)
+                    return MatrixSymbol('Matrix', new_type, right.size)
                 return 'Can\'t {} Variable of type {} with Matrix of type {}'.format(op, left.type, right.type)
             return 'Unknown error, shouldn\'t happen'
-        return 'Can\'t {} Variable with {}'.format(op, type(right))
+        return 'Can\'t {} Variable with {}'.format(op, right.name)
 
     return 'Unknown error, shouldn\'t happen'
 

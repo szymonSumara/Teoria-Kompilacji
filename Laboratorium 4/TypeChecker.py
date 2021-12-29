@@ -63,10 +63,10 @@ class TypeChecker(NodeVisitor):
 
 
     def visit_Integer(self, node):
-        return VariableSymbol('why does this exist', 'int')
+        return VariableSymbol('Variable', 'int')
 
     def visit_Float(self, node):
-        return VariableSymbol('why does this exist', 'float')
+        return VariableSymbol('Variable', 'float')
 
     def visit_Vector(self, node):
         types = []
@@ -78,7 +78,7 @@ class TypeChecker(NodeVisitor):
             types.append(visited_val.type)
         new_type = vector_type(types)
         if new_type:
-            return VectorSymbol('whyyyyyyy', new_type, len(node.body))
+            return VectorSymbol('Vector', new_type, len(node.body))
         print('Conflicting types in Vector in line {}'.format('x'))
         return None
 
@@ -101,7 +101,7 @@ class TypeChecker(NodeVisitor):
 
         new_type = vector_type(types)
         if new_type:
-            return MatrixSymbol('whyyyyyyy', new_type, (len(node.body), size))
+            return MatrixSymbol('Matrix', new_type, (len(node.body), size))
         print('Conflicting types of Vectors in Matrix in line {}'.format('x'))
         return None
 
@@ -119,8 +119,8 @@ class TypeChecker(NodeVisitor):
                     print('Bad argument for function {} in line {}'.format(node.fun_name, 'x'))
                     return None
             if len(symbols) == 2:
-                return MatrixSymbol('what', 'int', (node.fun_body[0].value, node.fun_body[1].value))
-            return MatrixSymbol('what', 'int', (node.fun_body[0].value, node.fun_body[0].value))
+                return MatrixSymbol('Matrix', 'int', (node.fun_body[0].value, node.fun_body[1].value))
+            return MatrixSymbol('Matrix', 'int', (node.fun_body[0].value, node.fun_body[0].value))
 
         print('Function {} is not defined in line {}'.format(node.fun_name, 'x'))
         return None
