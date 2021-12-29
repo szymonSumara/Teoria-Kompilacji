@@ -210,7 +210,11 @@ class TypeChecker(NodeVisitor):
 
 
     # TODO If Szymon
-
+    def visit_If(self,node):
+        self.visit(node.expression)
+        self.visit(node.instruction1)
+        if node.instruction2:
+            self.visit(node.instruction2)
 
     def visit_Transposition(self, node): # TODO transposition, uminus Jakub
         pass

@@ -10,11 +10,11 @@ for i = 1:N {
 
 while(k>0) {
     if(k<5)
-        i = 1;
+        z = i;
     else if(k<10)
-        i = 2;   
+        z = i;
     else
-        i = 3;
+        z = i;
     
     k = k - 1;
 }
