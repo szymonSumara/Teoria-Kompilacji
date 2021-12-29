@@ -50,23 +50,19 @@ class TypeChecker(NodeVisitor):
         result_symbol = get_new_symbol(op, symbol1, symbol2)
         if isinstance(result_symbol, str):
             print("{} in line {}".format(result_symbol, 'x'))
+            return None
         return result_symbol
 
 
     def visit_Assignment(self, node):
-
-        print(node.value)
-
         ex_symbol = self.visit(node.value)
 
-        print('tu cos powinno byc ' , node.assignment)
-
         if node.assignment == '=':
-            self.symbol_table.put(node.left_side.name, ex_symbol)
+            if ex_symbol:
+                self.symbol_table.put(node.left_side.name, ex_symbol)
 
 
     def visit_Integer(self, node):
-        print('visit Integer')
         return VariableSymbol('why does this exist', 'int')
 
     def visit_Float(self, node):
@@ -105,12 +101,11 @@ class TypeChecker(NodeVisitor):
 
         new_type = vector_type(types)
         if new_type:
-            return VectorSymbol('whyyyyyyy', new_type, len(node.body))
+            return MatrixSymbol('whyyyyyyy', new_type, (len(node.body), size))
         print('Conflicting types of Vectors in Matrix in line {}'.format('x'))
         return None
 
     def visit_Id(self, node):
-        print('visit Id')
         tmp = self.symbol_table.get(node.name)
         if tmp is None:
             print("Variable {} referenced before assignment in line {}".format(node.name, 'x'))

@@ -39,7 +39,6 @@ class SymbolTable(object):
 
     def put(self, name, symbol): # put variable symbol or fundef under <name> entry
         self.dict[name] = symbol
-        print(self.dict)
     #
 
     def get(self, name): # get variable symbol or fundef from <name> entry

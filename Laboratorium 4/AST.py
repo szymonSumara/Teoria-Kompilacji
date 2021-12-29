@@ -101,12 +101,6 @@ class Matrix(Node):
         self.body = body
 
 
-class MatrixBody(Node):
-    def __init__(self, row, next_row=None):
-        self.row = row
-        self.next_row = next_row
-
-
 class Range(Node):
     def __init__(self, var, fun_body):
         self.var = var

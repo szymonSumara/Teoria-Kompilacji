@@ -38,7 +38,6 @@ def build_parser():
         if (len(p) <= 2):
             p[0] = AST.Instructions(p[1])
         else:
-            print(p[1], p[2])
             p[2].children.insert(0, p[1])
             p[0] = p[2]
 
@@ -168,9 +167,10 @@ def build_parser():
         """matrix_body : vector
                        | vector  COMMA matrix_body"""
         if len(p) <= 2:
-            p[0] = AST.MatrixBody(p[1])
+            p[0] = [p[1]]
         else:
-            p[0] = AST.MatrixBody(p[1], p[3])
+            p[3].insert(0, p[1])
+            p[0] = p[3]
 
     def p_vector(p):
         """vector : SQUAREOPEN vector_body SQUARECLOSE
