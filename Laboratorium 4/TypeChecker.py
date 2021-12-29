@@ -50,7 +50,7 @@ class TypeChecker(NodeVisitor):
 
         result_symbol = get_new_symbol(op, symbol1, symbol2)
         if isinstance(result_symbol, str):
-            print("{} in line {}".format(result_symbol, 'x'))
+            print("{} in line {}".format(result_symbol, node.line_number))
             return None
         return result_symbol
 
@@ -82,13 +82,13 @@ class TypeChecker(NodeVisitor):
         for val in node.body:
             visited_val = self.visit(val)
             if not isinstance(visited_val, VariableSymbol):
-                print('Element of Vector is not a Variable in line {}'.format('x'))
+                print('Element of Vector is not a Variable in line {}'.format(node.line_number))
                 return None
             types.append(visited_val.type)
         new_type = vector_type(types)
         if new_type:
             return VectorSymbol('Vector', new_type, len(node.body))
-        print('Conflicting types in Vector in line {}'.format('x'))
+        print('Conflicting types in Vector in line {}'.format(node.line_number))
         return None
 
 
@@ -101,19 +101,19 @@ class TypeChecker(NodeVisitor):
             types.append(visited_val.type)
             if size:
                 if size != visited_val.size:
-                    print('Conflicting sizes of Vectors in Matrix in line {}'.format('x'))
+                    print('Conflicting sizes of Vectors in Matrix in line {}'.format(node.line_number))
                     return None
             else:
                 size = visited_val.size
             if not isinstance(visited_val, VectorSymbol):
-                print('Element of matrix is not a Vector in line {}'.format('x'))
+                print('Element of matrix is not a Vector in line {}'.format(node.line_number))
                 return None
             node.body[i] = visited_val
 
         new_type = vector_type(types)
         if new_type:
             return MatrixSymbol('Matrix', new_type, (len(node.body), size))
-        print('Conflicting types of Vectors in Matrix in line {}'.format('x'))
+        print('Conflicting types of Vectors in Matrix in line {}'.format(node.line_number))
         return None
 
     def visit_Function(self, node):
@@ -123,21 +123,20 @@ class TypeChecker(NodeVisitor):
 
         if node.fun_name == 'ones' or node.fun_name == 'zeros' or node.fun_name == 'eye':
             if len(symbols) > 2 or len(symbols) < 1:
-                print('Bad number of arguments for function {} in line {}'.format(node.fun_name, 'x'))
+                print('Bad number of arguments for function {} in line {}'.format(node.fun_name, node.line_number))
                 return None
             for sym in symbols:
                 if sym.type != 'int':
-                    print('Bad argument for function {} in line {}'.format(node.fun_name, 'x'))
+                    print('Bad argument for function {} in line {}'.format(node.fun_name, node.line_number))
                     return None
             if len(symbols) == 2:
                 return MatrixSymbol('Matrix', 'int', (node.fun_body[0].value, node.fun_body[1].value))
             return MatrixSymbol('Matrix', 'int', (node.fun_body[0].value, node.fun_body[0].value))
 
-        print('Function {} is not defined in line {}'.format(node.fun_name, 'x'))
+        print('Function {} is not defined in line {}'.format(node.fun_name, node.line_number))
         return None
 
     def visit_Id(self, node):
-        print('visit Id')
         tmp = self.symbol_table.get(node.name)
         if tmp is None:
             print("Variable {} referenced before assignment in line {}".format(node.name, node.line_number))
@@ -154,21 +153,21 @@ class TypeChecker(NodeVisitor):
         var = self.symbol_table.get(node.var.name)
 
         if var is None:
-            return print("Variable undefined")
+            return print("Variable undefined in line {}".format(node.line_number))
         if isinstance(var, MatrixSymbol):
 
             if len(node.fun_body.arguments) != 2:
-                return print("Invalid arguments number")
+                return print("Invalid arguments number in line {}".format(node.line_number))
             if not 0 <= node.fun_body.arguments[0].value < var.size[0] or not 0 <= node.fun_body.arguments[1].value < var.size[1]:
                 return print("Out of range in line {0}.".format(node.line_number))
             return VariableSymbol("why this exist", var.type)
         if isinstance(var, VectorSymbol):
             if len(node.fun_body.arguments) != 1:
-                return print("Invalid arguments number")
+                return print("Invalid arguments number in line {}".format(node.line_number))
             if 0 > node.fun_body.arguments[0].value >= var.size :
                 return print("Out of range")
             return VariableSymbol("why this exist", var.type)
-        return print("Range unsupported type Range can be use only with Matrix and Vector")
+        return print("Range unsupported type Range can be use only with Matrix and Vector in line {}".format(node.line_number))
 
 
     def visit_String(self,node):
@@ -189,7 +188,7 @@ class TypeChecker(NodeVisitor):
 
     def visit_FlowKeyword(self, node):
         if nested_loops_number == 0:
-            print(node.value + " outside loop")
+            print(node.value + " outside loop in line {}".format(node.line_number))
 
     def visit_Function(self, node):
         size = node.fun_body.arguments[0].value;

@@ -128,7 +128,6 @@ def build_parser(lexer):
         if(len(p) <= 2):
             p[0] = AST.FunctionBody(p[1], line_number=lexer.lineno)
         else:
-            print(p[1], p[2], p[3])
             p[3].arguments.insert(0, p[1])
             p[0] = p[3]
 

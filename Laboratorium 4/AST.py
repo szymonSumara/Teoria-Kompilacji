@@ -7,7 +7,6 @@ class Node(object):
 
 class Function(Node):
     def __init__(self, fun_name, fun_body, line_number=None):
-        print(line_number)
         self.line_number = line_number
         self.fun_name = fun_name
         self.fun_body = fun_body
