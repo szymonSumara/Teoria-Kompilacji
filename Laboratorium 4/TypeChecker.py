@@ -48,6 +48,10 @@ class TypeChecker(NodeVisitor):
         symbol2 = self.visit(node.right_side)    # type2 = node.right.accept(self)
         op    = node.operator
 
+        if symbol1 is None or symbol2 is None:
+            print('Can\'t execute operation with undeclared variables in line {}'.format(node.line_number))
+            return None
+
         result_symbol = get_new_symbol(op, symbol1, symbol2)
         if isinstance(result_symbol, str):
             print("{} in line {}".format(result_symbol, node.line_number))
@@ -59,16 +63,18 @@ class TypeChecker(NodeVisitor):
 
         ex_symbol = self.visit(node.value)
 
-
         if node.assignment == '=':
             if isinstance(node.left_side, AST.Range):
                 left_side_symbol = self.visit(node.left_side)
                 if left_side_symbol:
                     left_side_type = left_side_symbol.type
                     if left_side_type != ex_symbol.type:
-                        print("Assigment: Invalid types")
+                        print("Can't assign value with type {} to {} of type {} in line {}".format(ex_symbol.type,
+                                                        left_side_symbol.name, left_side_type, node.line_number))
             else:
                 self.symbol_table.put(node.left_side.name, ex_symbol)
+
+        # TODO addassign itp Szymon
 
 
     def visit_Integer(self, node):
@@ -108,7 +114,6 @@ class TypeChecker(NodeVisitor):
             if not isinstance(visited_val, VectorSymbol):
                 print('Element of matrix is not a Vector in line {}'.format(node.line_number))
                 return None
-            node.body[i] = visited_val
 
         new_type = vector_type(types)
         if new_type:
@@ -143,11 +148,9 @@ class TypeChecker(NodeVisitor):
         return tmp
 
     def visit_Block(self, node):
-        print("Block")
-        self.symbol_table = self.symbol_table.pushScope('new');
+        self.symbol_table = self.symbol_table.pushScope('new')
         self.visit(node.body)
-        self.symbol_table = self.symbol_table.popScope();
-        return None;
+        self.symbol_table = self.symbol_table.popScope()
 
     def visit_Range(self, node):
         var = self.symbol_table.get(node.var.name)
@@ -156,31 +159,37 @@ class TypeChecker(NodeVisitor):
             return print("Variable undefined in line {}".format(node.line_number))
         if isinstance(var, MatrixSymbol):
 
-            if len(node.fun_body.arguments) != 2:
+            if len(node.fun_body) != 2:
                 return print("Invalid arguments number in line {}".format(node.line_number))
-            if not 0 <= node.fun_body.arguments[0].value < var.size[0] or not 0 <= node.fun_body.arguments[1].value < var.size[1]:
-                return print("Out of range in line {0}.".format(node.line_number))
-            return VariableSymbol("why this exist", var.type)
+            if not 0 <= node.fun_body[0].value < var.size[0] or not 0 <= node.fun_body[1].value < var.size[1]:
+                return print("Out of range in line {0}".format(node.line_number))
+            return VariableSymbol("Matrix", var.type)
         if isinstance(var, VectorSymbol):
-            if len(node.fun_body.arguments) != 1:
+            if len(node.fun_body) != 1:
                 return print("Invalid arguments number in line {}".format(node.line_number))
-            if 0 > node.fun_body.arguments[0].value >= var.size :
+            if 0 > node.fun_body[0].value >= var.size :
                 return print("Out of range")
-            return VariableSymbol("why this exist", var.type)
-        return print("Range unsupported type Range can be use only with Matrix and Vector in line {}".format(node.line_number))
+            return VariableSymbol("Vector", var.type)
+        return print("Can't use range on {} in line {}".format(var.name, node.line_number))
 
 
-    def visit_String(self,node):
-        return VariableSymbol("something", "string");
+    def visit_String(self, node):
+        return VariableSymbol("Variable", "string")
 
     def visit_For(self, node):
-        # TODO: co z range ?
+        self.symbol_table = self.symbol_table.pushScope('new')
+        ex_symbol = VariableSymbol('Variable', 'int')
+        self.symbol_table.put(node.id, ex_symbol)
+        self.visit(node.ne1)
+        self.visit(node.ne2)
         global nested_loops_number
         nested_loops_number += 1
         self.visit(node.instruction)
         nested_loops_number -= 1
-    def visit_While(self,node):
-        # TODO: co z binary expresion ?
+        self.symbol_table = self.symbol_table.popScope()
+
+    def visit_While(self, node):
+        self.visit(node.expression)
         global nested_loops_number
         nested_loops_number += 1
         self.visit(node.instruction)
@@ -189,10 +198,6 @@ class TypeChecker(NodeVisitor):
     def visit_FlowKeyword(self, node):
         if nested_loops_number == 0:
             print(node.value + " outside loop in line {}".format(node.line_number))
-
-    def visit_Function(self, node):
-        size = node.fun_body.arguments[0].value;
-        return MatrixSymbol("bla bla", "int", (size, size))
 
     def visit_Return(self, node):
         expresion_result = self.visit(node.instruction)
@@ -203,4 +208,10 @@ class TypeChecker(NodeVisitor):
         for element in node.body:
             self.visit(element)
 
+
+    # TODO If Szymon
+
+
+    def visit_Transposition(self, node): # TODO transposition, uminus Jakub
+        pass
 

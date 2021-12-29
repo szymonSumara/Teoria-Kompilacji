@@ -12,10 +12,13 @@ D = [[1,0],
 B[2] = 1;
 D[2,1] = 2;
 
-
+i = [9,6];
 for i = 1:N {
+    x = i + 1;
     for j = i:M {
         continue;
+        j = i;
     }
     break;
 }
+y = i + 8;

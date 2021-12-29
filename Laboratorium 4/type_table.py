@@ -13,7 +13,7 @@ type_table['int']['float'] = 'float'
 type_table['float']['int'] = 'float'
 type_table['float']['float'] = 'float'
 
-type_table['string']['string'] = 'int'
+type_table['string']['string'] = 'string'
 
 type_table['bool']['bool'] = 'bool'
 

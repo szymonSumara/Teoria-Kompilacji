@@ -126,9 +126,9 @@ def build_parser(lexer):
                     | numeric_expression COMMA fun_body"""
 
         if(len(p) <= 2):
-            p[0] = AST.FunctionBody(p[1], line_number=lexer.lineno)
+            p[0] = [p[1]]
         else:
-            p[3].arguments.insert(0, p[1])
+            p[3].insert(0, p[1])
             p[0] = p[3]
 
 

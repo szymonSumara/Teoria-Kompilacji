@@ -35,13 +35,8 @@ class TreePrinter:
     @addToClass(AST.Function)
     def printTree(self, indent=0):
         print("| " * indent + self.fun_name)
-        self.fun_body.printTree(indent=indent + 1)
-
-    @addToClass(AST.FunctionBody)
-    def printTree(self, indent=0):
-        for argument in self.arguments:
+        for argument in self.fun_body:
             argument.printTree(indent)
-
 
     @addToClass(AST.For)
     def printTree(self, indent=0):
@@ -77,8 +72,6 @@ class TreePrinter:
         print("| " * indent + "PRINT")
         for element in self.body:
             element.printTree(indent=indent + 1)
-
-
 
     @addToClass(AST.Return)
     def printTree(self, indent=0):
@@ -118,7 +111,8 @@ class TreePrinter:
     def printTree(self, indent=0):
         print("| " * indent + "REF")
         self.var.printTree(indent + 1)
-        self.fun_body.printTree(indent + 1)
+        for val in self.fun_body:
+            val.printTree(indent + 1)
 
 
     @addToClass(AST.FlowKeyword)

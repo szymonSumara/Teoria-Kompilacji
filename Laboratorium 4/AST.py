@@ -12,12 +12,6 @@ class Function(Node):
         self.fun_body = fun_body
 
 
-class FunctionBody(Node):
-    def __init__(self, argument, line_number=None):
-        self.line_number = line_number
-        self.arguments = [argument]
-
-
 class Block(Node):
     def __init__(self, body, line_number=None):
         self.line_number = line_number
@@ -75,7 +69,6 @@ class Expression(Node):
 class Transposition(Node):
     def __init__(self, factor, line_number=None):
         self.line_number = line_number
-
         self.factor = factor
 
 
@@ -90,12 +83,6 @@ class Print(Node):
     def __init__(self, body, line_number=None):
         self.line_number = line_number
         self.body = body
-
-
-class PrintBody(Node):
-    def __init__(self, argument, next_argument=None):
-        self.argument = argument
-        self.next_argument = next_argument
 
 
 class String(Node):
