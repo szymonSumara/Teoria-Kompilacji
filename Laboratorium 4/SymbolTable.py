@@ -39,15 +39,16 @@ class SymbolTable(object):
 
     def put(self, name, symbol): # put variable symbol or fundef under <name> entry
         self.dict[name] = symbol
-        print(self.dict)
     #
 
     def get(self, name): # get variable symbol or fundef from <name> entry
-        tmp = self.dict[name]
-        if tmp is None:
+        if name in self.dict:
+            return self.dict[name];
+        else:
             if self.parent:
                 return self.parent.get(name)
-        return tmp
+
+        return None
     #
 
     def getParentScope(self):

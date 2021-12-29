@@ -1,0 +1,170 @@
+Created by PLY version 3.11 (http://www.dabeaz.com/ply)
+
+Grammar
+
+Rule 0     S' -> instructions
+Rule 1     instructions -> instruction
+Rule 2     instructions -> instruction instructions
+Rule 3     instruction -> block
+Rule 4     instruction -> conditional
+Rule 5     instruction -> loop
+Rule 6     instruction -> statement SEMICOLON
+Rule 7     instruction -> error SEMICOLON
+Rule 8     statement -> assignment
+Rule 9     statement -> flow_keyword
+Rule 10    statement -> fun
+Rule 11    statement -> return
+Rule 12    statement -> print
+Rule 13    flow_keyword -> BREAK
+Rule 14    flow_keyword -> CONTINUE
+Rule 15    block -> CURLYOPEN instructions CURLYCLOSE
+Rule 16    block -> CURLYOPEN error CURLYCLOSE
+Rule 17    print -> PRINT print_body
+Rule 18    print_body -> string
+Rule 19    print_body -> expression
+Rule 20    print_body -> string COMMA print_body
+Rule 21    print_body -> expression COMMA print_body
+Rule 22    return -> RETURN expression
+Rule 23    return -> RETURN
+Rule 24    string -> STRING
+Rule 25    conditional -> IF ROUNDOPEN expression ROUNDCLOSE instruction
+Rule 26    conditional -> IF ROUNDOPEN expression ROUNDCLOSE instruction ELSE instruction
+Rule 27    loop -> while
+Rule 28    loop -> for
+Rule 29    while -> WHILE ROUNDOPEN expression ROUNDCLOSE instruction
+Rule 30    for -> FOR ID ASSIGN numeric_expression RANGE numeric_expression instruction
+Rule 31    fun -> fun_name ROUNDOPEN fun_body ROUNDCLOSE
+Rule 32    fun -> fun_name ROUNDOPEN error ROUNDCLOSE
+Rule 33    fun_body -> numeric_expression
+Rule 34    fun_body -> numeric_expression COMMA fun_body
+Rule 35    fun_name -> ZEROS
+Rule 36    fun_name -> ONES
+Rule 37    fun_name -> EYE
+Rule 38    assignment_left_side -> var
+Rule 39    assignment_operator -> ASSIGN
+Rule 40    assignment_operator -> ADDASSIGN
+Rule 41    assignment_operator -> SUBASSIGN
+Rule 42    assignment_operator -> MULASSIGN
+Rule 43    assignment_operator -> DIVASSIGN
+Rule 44    matrix -> SQUAREOPEN matrix_body SQUARECLOSE
+Rule 45    matrix_body -> vector
+Rule 46    matrix_body -> vector COMMA matrix_body
+Rule 47    vector -> SQUAREOPEN vector_body SQUARECLOSE
+Rule 48    vector -> SQUAREOPEN SQUARECLOSE
+Rule 49    vector_body -> numeric_expression
+Rule 50    vector_body -> numeric_expression COMMA vector_body
+Rule 51    expression -> comparison_expression
+Rule 52    expression -> numeric_expression
+Rule 53    expression -> fun
+Rule 54    comparison_expression -> numeric_expression L numeric_expression
+Rule 55    comparison_expression -> numeric_expression G numeric_expression
+Rule 56    comparison_expression -> numeric_expression EQ numeric_expression
+Rule 57    comparison_expression -> numeric_expression NEQ numeric_expression
+Rule 58    comparison_expression -> numeric_expression GE numeric_expression
+Rule 59    comparison_expression -> numeric_expression LE numeric_expression
+Rule 60    comparison_expression -> ROUNDOPEN comparison_expression ROUNDCLOSE
+Rule 61    numeric_expression -> numeric_expression ADD term
+Rule 62    numeric_expression -> numeric_expression SUB term
+Rule 63    numeric_expression -> numeric_expression DOTADD term
+Rule 64    numeric_expression -> numeric_expression DOTSUB term
+Rule 65    numeric_expression -> term
+Rule 66    term -> term MUL factor
+Rule 67    term -> term DIV factor
+Rule 68    term -> term DOTMUL factor
+Rule 69    term -> term DOTDIV factor
+Rule 70    term -> factor
+Rule 71    factor -> FLOATNUM
+Rule 72    factor -> INTNUM
+Rule 73    factor -> var
+Rule 74    factor -> ROUNDOPEN numeric_expression ROUNDCLOSE
+Rule 75    factor -> unary_operator
+Rule 76    unary_operator -> negation
+Rule 77    unary_operator -> transposition
+Rule 78    negation -> SUB factor
+Rule 79    transposition -> factor TRANSPOSITION
+Rule 80    var -> ID
+Rule 81    var -> ID SQUAREOPEN fun_body SQUARECLOSE
+
+Terminals, with rules where they appear
+
+ADD                  : 61
+ADDASSIGN            : 40
+ASSIGN               : 30 39
+BREAK                : 13
+COMMA                : 20 21 34 46 50
+CONTINUE             : 14
+CURLYCLOSE           : 15 16
+CURLYOPEN            : 15 16
+DIV                  : 67
+DIVASSIGN            : 43
+DOTADD               : 63
+DOTDIV               : 69
+DOTMUL               : 68
+DOTSUB               : 64
+ELSE                 : 26
+EQ                   : 56
+EYE                  : 37
+FLOATNUM             : 71
+FOR                  : 30
+G                    : 55
+GE                   : 58
+ID                   : 30 80 81
+IF                   : 25 26
+INTNUM               : 72
+L                    : 54
+LE                   : 59
+MUL                  : 66
+MULASSIGN            : 42
+NEQ                  : 57
+ONES                 : 36
+PRINT                : 17
+RANGE                : 30
+RETURN               : 22 23
+ROUNDCLOSE           : 25 26 29 31 32 60 74
+ROUNDOPEN            : 25 26 29 31 32 60 74
+SEMICOLON            : 6 7
+SQUARECLOSE          : 44 47 48 81
+SQUAREOPEN           : 44 47 48 81
+STRING               : 24
+SUB                  : 62 78
+SUBASSIGN            : 41
+TRANSPOSITION        : 79
+WHILE                : 29
+ZEROS                : 35
+error                : 7 16 32
+
+Nonterminals, with rules where they appear
+
+assignment           : 8
+assignment_left_side : 
+assignment_operator  : 
+block                : 3
+comparison_expression : 51 60
+conditional          : 4
+expression           : 19 21 22 25 26 29
+factor               : 66 67 68 69 70 78 79
+flow_keyword         : 9
+for                  : 28
+fun                  : 10 53
+fun_body             : 31 34 81
+fun_name             : 31 32
+instruction          : 1 2 25 26 26 29 30
+instructions         : 2 15 0
+loop                 : 5
+matrix               : 
+matrix_body          : 44 46
+negation             : 76
+numeric_expression   : 30 30 33 34 49 50 52 54 54 55 55 56 56 57 57 58 58 59 59 61 62 63 64 74
+print                : 12
+print_body           : 17 20 21
+return               : 11
+statement            : 6
+string               : 18 20
+term                 : 61 62 63 64 65 66 67 68 69
+transposition        : 77
+unary_operator       : 75
+var                  : 38 73
+vector               : 45 46
+vector_body          : 47 50
+while                : 27
+

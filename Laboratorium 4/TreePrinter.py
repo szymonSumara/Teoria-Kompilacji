@@ -21,6 +21,11 @@ class TreePrinter:
         for ins in self.children:
             ins.printTree(indent)
 
+    @addToClass(AST.Block)
+    def printTree(self, indent=0):
+        print("| " * indent + "Block")
+        self.body.printTree(indent)
+
     @addToClass(AST.Assignment)
     def printTree(self, indent=0):
         print("| " * indent + self.assignment)
@@ -34,9 +39,8 @@ class TreePrinter:
 
     @addToClass(AST.FunctionBody)
     def printTree(self, indent=0):
-        self.argument.printTree(indent)
-        if self.next_argument:
-            self.next_argument.printTree(indent)
+        for argument in self.arguments:
+            argument.printTree(indent)
 
     @addToClass(AST.For)
     def printTree(self, indent=0):
@@ -70,13 +74,10 @@ class TreePrinter:
     @addToClass(AST.Print)
     def printTree(self, indent=0):
         print("| " * indent + "PRINT")
-        self.body.printTree(indent=indent + 1)
+        for element in self.body:
+            element.printTree(indent=indent + 1)
 
-    @addToClass(AST.PrintBody)
-    def printTree(self, indent=0):
-        self.argument.printTree(indent)
-        if self.next_argument:
-            self.next_argument.printTree(indent)
+
 
     @addToClass(AST.Return)
     def printTree(self, indent=0):
@@ -103,14 +104,8 @@ class TreePrinter:
     @addToClass(AST.Matrix)
     def printTree(self, indent=0):
         print("| " * indent + "MATRIX")
-        if self.body:
-            self.body.printTree(indent + 1)
-
-    @addToClass(AST.MatrixBody)
-    def printTree(self, indent=0):
-        self.row.printTree(indent)
-        if self.next_row:
-            self.next_row.printTree(indent)
+        for row in self.body:
+            row.printTree(indent + 1)
 
     @addToClass(AST.Vector)
     def printTree(self, indent=0):
@@ -145,6 +140,7 @@ class TreePrinter:
     def printTree(self, indent=0):
         print("| " * indent + 'TRANSPOSE')
         self.factor.printTree(indent=indent + 1)
+
 
     @addToClass(AST.Error)
     def printTree(self, indent=0):
