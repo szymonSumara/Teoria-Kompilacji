@@ -51,8 +51,8 @@ class TypeChecker(NodeVisitor):
         op    = node.operator
 
         result_symbol = get_new_symbol(op, symbol1, symbol2)
-        if result_symbol is None:
-            print("Type error in line {}".format('x'))
+        if isinstance(result_symbol, str):
+            print("Error: {} in line {}".format(result_symbol, 'x'))
         return result_symbol
 
 
@@ -78,7 +78,18 @@ class TypeChecker(NodeVisitor):
     def visit_Vector(self, node):
         types = []
         for val in node.body:
+            if not isinstance(val, VariableSymbol):
+                print('Conflicting types in vector in line {}'.format('x'))
+                return None
             types.append(self.visit(val).type)
+        # TODO funkcja dajacy typ wektora Jakub
+        return VectorSymbol('whyyyyyyy', 'int', len(node.body))
+
+
+    def visit_Matrix(self, node):
+        symbols = []
+        for val in node.body:
+            symbols.append(self.visit(val))
         # TODO funkcja dajacy typ wektora Jakub
         return VectorSymbol('whyyyyyyy', 'int', len(node.body))
 
@@ -91,6 +102,9 @@ class TypeChecker(NodeVisitor):
         if tmp is None:
             print("super error")
         return tmp
-        
+
+
+
+
 
 
