@@ -1,6 +1,10 @@
 class Node(object):
     pass
 
+
+# TODO numery lini szymon
+
+
 class Function(Node):
     def __init__(self, fun_name, fun_body, line_number=None):
         print(line_number)
@@ -87,6 +91,12 @@ class Print(Node):
     def __init__(self, body, line_number=None):
         self.line_number = line_number
         self.body = body
+
+
+class PrintBody(Node):
+    def __init__(self, argument, next_argument=None):
+        self.argument = argument
+        self.next_argument = next_argument
 
 
 class String(Node):
