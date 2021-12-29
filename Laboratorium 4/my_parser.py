@@ -76,10 +76,11 @@ def build_parser():
                       | expression
                      | string COMMA print_body
                      | expression COMMA print_body"""
-        if len(p) == 2:
-            p[0] = AST.PrintBody(p[1])
+        if len(p) <= 2:
+            p[0] = [p[1]]
         else:
-            p[0] = AST.PrintBody(p[1], p[3])
+            p[3].insert(0, p[1])
+            p[0] = p[3]
 
 
     def p_return(p):
@@ -123,11 +124,11 @@ def build_parser():
     def p_fun_body(p):
         """fun_body : numeric_expression
                     | numeric_expression COMMA fun_body"""
-
-        if(len(p) <= 2):
-            p[0] = AST.FunctionBody(p[1])
+        if len(p) <= 2:
+            p[0] = [p[1]]
         else:
-            p[0] = AST.FunctionBody(p[1], p[3])
+            p[3].insert(0, p[1])
+            p[0] = p[3]
 
 
     def p_fun_name(p):

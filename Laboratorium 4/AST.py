@@ -11,12 +11,6 @@ class Function(Node):
         self.fun_body = fun_body
 
 
-class FunctionBody(Node):
-    def __init__(self, argument, next_argument=None):
-        self.argument = argument
-        self.next_argument = next_argument
-
-
 class Instructions(Node):
     def __init__(self, instruction):
         self.children = [instruction]
@@ -70,12 +64,6 @@ class Print(Node):
         self.body = body
 
 
-class PrintBody(Node):
-    def __init__(self, argument, next_argument=None):
-        self.argument = argument
-        self.next_argument = next_argument
-
-
 class String(Node):
     def __init__(self, value):
         self.value = value
@@ -97,14 +85,14 @@ class Float(Node):
 
 
 class Matrix(Node):
-    def __init__(self, body=None):
+    def __init__(self, body=[]):
         self.body = body
 
 
 class Range(Node):
-    def __init__(self, var, fun_body):
+    def __init__(self, var, body):
         self.var = var
-        self.fun_body = fun_body
+        self.body = body
 
 
 class Vector(Node):

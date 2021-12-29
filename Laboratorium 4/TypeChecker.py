@@ -105,6 +105,26 @@ class TypeChecker(NodeVisitor):
         print('Conflicting types of Vectors in Matrix in line {}'.format('x'))
         return None
 
+    def visit_Function(self, node):
+        symbols = []
+        for arg in node.fun_body:
+            symbols.append(self.visit(arg))
+
+        if node.fun_name == 'ones' or node.fun_name == 'zeros' or node.fun_name == 'eye':
+            if len(symbols) > 2 or len(symbols) < 1:
+                print('Bad number of arguments for function {} in line {}'.format(node.fun_name, 'x'))
+                return None
+            for sym in symbols:
+                if sym.type != 'int':
+                    print('Bad argument for function {} in line {}'.format(node.fun_name, 'x'))
+                    return None
+            if len(symbols) == 2:
+                return MatrixSymbol('what', 'int', (node.fun_body[0].value, node.fun_body[1].value))
+            return MatrixSymbol('what', 'int', (node.fun_body[0].value, node.fun_body[0].value))
+
+        print('Function {} is not defined in line {}'.format(node.fun_name, 'x'))
+        return None
+
     def visit_Id(self, node):
         tmp = self.symbol_table.get(node.name)
         if tmp is None:
