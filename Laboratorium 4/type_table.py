@@ -63,6 +63,30 @@ type_table['!=']['float'] = {}
 type_table['!=']['string'] = {}
 type_table['!=']['bool'] = {}
 
+type_table['+='] = {}
+type_table['+=']['int'] = {}
+type_table['+=']['float'] = {}
+type_table['+=']['string'] = {}
+type_table['+=']['bool'] = {}
+
+type_table['-='] = {}
+type_table['-=']['int'] = {}
+type_table['-=']['float'] = {}
+type_table['-=']['string'] = {}
+type_table['-=']['bool'] = {}
+
+type_table['*='] = {}
+type_table['*=']['int'] = {}
+type_table['*=']['float'] = {}
+type_table['*=']['string'] = {}
+type_table['*=']['bool'] = {}
+
+type_table['/='] = {}
+type_table['/=']['int'] = {}
+type_table['/=']['float'] = {}
+type_table['/=']['string'] = {}
+type_table['/=']['bool'] = {}
+
 type_table['+']['int']['int'] = 'int'
 type_table['+']['int']['float'] = 'float'
 type_table['+']['float']['int'] = 'float'
@@ -117,13 +141,35 @@ type_table['!=']['float']['int'] = 'bool'
 type_table['!=']['float']['float'] = 'bool'
 type_table['!=']['bool']['bool'] = 'bool'
 
+#assigment
+type_table['+=']['int']['int'] = 'int'
+type_table['+=']['int']['float'] = 'float'
+type_table['+=']['float']['int'] = 'float'
+type_table['+=']['float']['float'] = 'float'
+type_table['+=']['string']['string'] = 'float'
+
+type_table['-=']['int']['int'] = 'int'
+type_table['-=']['int']['float'] = 'float'
+type_table['-=']['float']['int'] = 'float'
+type_table['-=']['float']['float'] = 'float'
+
+type_table['*=']['int']['int'] = 'int'
+type_table['*=']['int']['float'] = 'float'
+type_table['*=']['float']['int'] = 'float'
+type_table['*=']['float']['float'] = 'float'
+
+type_table['/=']['int']['int'] = 'int'
+type_table['/=']['int']['float'] = 'float'
+type_table['/=']['float']['int'] = 'float'
+type_table['/=']['float']['float'] = 'float'
 
 # TODO to ^ jakub
 
 
 def get_new_symbol(op, left, right):
     if isinstance(left, VectorSymbol):
-        if op == '+' or op == '-':
+        if op == '+' or op == '-' or op == '+=' or op == '-=' or op == '*=' or op == '/=':
+
             if type(left) != type(right):
                 return 'Can\'t {} Vector to {}'.format(op, right.name)
             if left.size != right.size:
@@ -144,7 +190,7 @@ def get_new_symbol(op, left, right):
         return 'Can\'t {} Vector to {}'.format(op, right.name)
 
     if isinstance(left, MatrixSymbol):
-        if op == '+' or op == '-':
+        if op == '+' or op == '-' or op == '+=' or op == '-=' or op == '*=' or op == '/=':
             if type(left) != type(right):
                 return 'Can\'t {} Matrix to {}'.format(op, right.name)
             if left.size != right.size:

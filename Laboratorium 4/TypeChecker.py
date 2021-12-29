@@ -63,6 +63,7 @@ class TypeChecker(NodeVisitor):
 
         ex_symbol = self.visit(node.value)
 
+
         if node.assignment == '=':
             if isinstance(node.left_side, AST.Range):
                 left_side_symbol = self.visit(node.left_side)
@@ -73,6 +74,16 @@ class TypeChecker(NodeVisitor):
                                                         left_side_symbol.name, left_side_type, node.line_number))
             else:
                 self.symbol_table.put(node.left_side.name, ex_symbol)
+        else:
+            left_side_symbol = self.visit(node.left_side)
+            if left_side_symbol:
+                result_symbol = get_new_symbol(node.assignment, left_side_symbol, ex_symbol)
+
+                if isinstance(result_symbol, str):
+                    print("{} in line {}".format(result_symbol, node.line_number))
+                    return None
+                self.symbol_table.put(node.left_side.name, ex_symbol)
+                return result_symbol
 
         # TODO addassign itp Szymon
 
@@ -209,7 +220,6 @@ class TypeChecker(NodeVisitor):
             self.visit(element)
 
 
-    # TODO If Szymon
     def visit_If(self,node):
         self.visit(node.expression)
         self.visit(node.instruction1)
