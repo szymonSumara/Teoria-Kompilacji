@@ -10,7 +10,6 @@ class NodeVisitor(object):
 
     def visit(self, node):
         method = 'visit_' + node.__class__.__name__
-        print(method)
         visitor = getattr(self, method, self.generic_visit)
         return visitor(node)
 
@@ -42,8 +41,6 @@ class TypeChecker(NodeVisitor):
         self.symbol_table = SymbolTable(None, 'god why')
 
     def visit_Expression(self, node):
-
-        print('visit Expression')
                                           # alternative usage,
                                           # requires definition of accept method in class Node
         symbol1 = self.visit(node.left_side)     # type1 = node.left.accept(self)
@@ -52,7 +49,7 @@ class TypeChecker(NodeVisitor):
 
         result_symbol = get_new_symbol(op, symbol1, symbol2)
         if isinstance(result_symbol, str):
-            print("Error: {} in line {}".format(result_symbol, 'x'))
+            print("{} in line {}".format(result_symbol, 'x'))
         return result_symbol
 
 
@@ -78,29 +75,45 @@ class TypeChecker(NodeVisitor):
     def visit_Vector(self, node):
         types = []
         for val in node.body:
-            if not isinstance(val, VariableSymbol):
-                print('Conflicting types in vector in line {}'.format('x'))
+            visited_val = self.visit(val)
+            if not isinstance(visited_val, VariableSymbol):
+                print('Element of Vector is not a Variable in line {}'.format('x'))
                 return None
-            types.append(self.visit(val).type)
-        # TODO funkcja dajacy typ wektora Jakub
-        return VectorSymbol('whyyyyyyy', 'int', len(node.body))
+            types.append(visited_val.type)
+        new_type = vector_type(types)
+        if new_type:
+            return VectorSymbol('whyyyyyyy', new_type, len(node.body))
+        print('Conflicting types in Vector in line {}'.format('x'))
+        return None
 
 
     def visit_Matrix(self, node):
-        symbols = []
+        types = []
+        size = None
         for val in node.body:
-            symbols.append(self.visit(val))
-        # TODO funkcja dajacy typ wektora Jakub
-        return VectorSymbol('whyyyyyyy', 'int', len(node.body))
+            visited_val = self.visit(val)
+            types.append(visited_val.type)
+            if size:
+                if size != visited_val.size:
+                    print('Conflicting sizes of Vectors in Matrix in line {}'.format('x'))
+                    return None
+            else:
+                size = visited_val.size
+            if not isinstance(visited_val, VectorSymbol):
+                print('Element of matrix is not a Vector in line {}'.format('x'))
+                return None
 
-
-    # TODO visit matrix rozmiar, typ Jakub
+        new_type = vector_type(types)
+        if new_type:
+            return VectorSymbol('whyyyyyyy', new_type, len(node.body))
+        print('Conflicting types of Vectors in Matrix in line {}'.format('x'))
+        return None
 
     def visit_Id(self, node):
         print('visit Id')
         tmp = self.symbol_table.get(node.name)
         if tmp is None:
-            print("super error")
+            print("Variable {} referenced before assignment in line {}".format(node.name, 'x'))
         return tmp
 
 

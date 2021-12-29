@@ -2,38 +2,62 @@ from SymbolTable import *
 
 type_table = {}
 
-type_table['+'] = {}
+type_table['int'] = {}
+type_table['float'] = {}
+type_table['string'] = {}
+type_table['bool'] = {}
 
+type_table['int']['int'] = 'int'
+type_table['int']['float'] = 'float'
+
+type_table['float']['int'] = 'float'
+type_table['float']['float'] = 'float'
+
+type_table['string']['string'] = 'int'
+
+type_table['bool']['bool'] = 'bool'
+
+
+type_table['+'] = {}
 type_table['+']['int'] = {}
 type_table['+']['float'] = {}
 type_table['+']['string'] = {}
 
+type_table['-'] = {}
 type_table['-']['int'] = {}
 type_table['-']['float'] = {}
 
+type_table['*'] = {}
 type_table['*']['int'] = {}
 type_table['*']['float'] = {}
 
+type_table['/'] = {}
 type_table['/']['int'] = {}
 type_table['/']['float'] = {}
 
+type_table['<'] = {}
 type_table['<']['int'] = {}
 type_table['<']['float'] = {}
 
+type_table['>'] = {}
 type_table['>']['int'] = {}
 type_table['>']['float'] = {}
 
+type_table['<='] = {}
 type_table['<=']['int'] = {}
 type_table['<=']['float'] = {}
 
+type_table['>='] = {}
 type_table['>=']['int'] = {}
 type_table['>=']['float'] = {}
 
+type_table['=='] = {}
 type_table['==']['int'] = {}
 type_table['==']['float'] = {}
 type_table['==']['string'] = {}
 type_table['==']['bool'] = {}
 
+type_table['!='] = {}
 type_table['!=']['int'] = {}
 type_table['!=']['float'] = {}
 type_table['!=']['string'] = {}
@@ -179,8 +203,16 @@ def get_new_symbol(op, left, right):
 
 
 def vector_type(types):
-    is_string = False
-    is_float = False
+    current_type = None
+    for typ in types:
+        if current_type:
+            try:
+                current_type = type_table[typ][current_type]
+            except KeyError:
+                return None
+        else:
+            current_type = typ
+    return current_type
 
 
 def check_type(op, left, right):
