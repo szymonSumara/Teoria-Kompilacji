@@ -163,12 +163,10 @@ type_table['/=']['int']['float'] = 'float'
 type_table['/=']['float']['int'] = 'float'
 type_table['/=']['float']['float'] = 'float'
 
-# TODO to ^ jakub
-
 
 def get_new_symbol(op, left, right):
     if isinstance(left, VectorSymbol):
-        if op == '+' or op == '-' or op == '+=' or op == '-=' or op == '*=' or op == '/=':
+        if op == '+' or op == '-':
 
             if type(left) != type(right):
                 return 'Can\'t {} Vector to {}'.format(op, right.name)
@@ -190,7 +188,7 @@ def get_new_symbol(op, left, right):
         return 'Can\'t {} Vector to {}'.format(op, right.name)
 
     if isinstance(left, MatrixSymbol):
-        if op == '+' or op == '-' or op == '+=' or op == '-=' or op == '*=' or op == '/=':
+        if op == '+' or op == '-':
             if type(left) != type(right):
                 return 'Can\'t {} Matrix to {}'.format(op, right.name)
             if left.size != right.size:

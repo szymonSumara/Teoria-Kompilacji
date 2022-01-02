@@ -24,3 +24,11 @@ z = x + y;
 x = ones(3,5);
 z = x[7,10];
 v = x[2,3,4];
+
+a = zeros(5);
+b = zeros(2, 5);
+
+c = a * b;
+d = a * b';
+
+e = d + x;

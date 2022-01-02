@@ -10,6 +10,7 @@ class VariableSymbol(Symbol): # (Symbol)
     def __init__(self, name, type):
         self.name = name
         self.type = type
+        self.type_name = 'Variable'
     #
 
 
@@ -19,6 +20,7 @@ class VectorSymbol(Symbol): # (Symbol)
         self.name = name
         self.type = type
         self.size = size
+        self.type_name = 'Vector'
 
 
 class MatrixSymbol(Symbol): # (Symbol)
@@ -27,6 +29,7 @@ class MatrixSymbol(Symbol): # (Symbol)
         self.name = name
         self.type = type
         self.size = size
+        self.type_name = 'Matrix'
 
 
 class SymbolTable(object):

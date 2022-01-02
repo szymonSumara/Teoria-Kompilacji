@@ -2,9 +2,6 @@ class Node(object):
     pass
 
 
-# TODO numery lini szymon
-
-
 class Function(Node):
     def __init__(self, fun_name, fun_body, line_number=None):
         self.line_number = line_number
