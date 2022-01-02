@@ -63,6 +63,10 @@ class TypeChecker(NodeVisitor):
 
         ex_symbol = self.visit(node.value)
 
+        if ex_symbol is None:
+            print('Right side value in assigment doesn\'t exist in line {}'.format(node.line_number))
+            return None
+
 
         if node.assignment == '=':
             if isinstance(node.left_side, AST.Range):
@@ -70,29 +74,29 @@ class TypeChecker(NodeVisitor):
                 if left_side_symbol:
                     left_side_type = left_side_symbol.type
                     if left_side_type != ex_symbol.type:
-                        print("Can't assign value with type {} to {} of type {} in line {}".format(ex_symbol.type,
-                                                        left_side_symbol.name, left_side_type, node.line_number))
+                        print("Can't assign {} of type {} to {} of type {} in line {}".format(ex_symbol.type_name, ex_symbol.type,
+                                                        left_side_symbol.type_name, left_side_type, node.line_number))
             else:
+                ex_symbol.name = node.left_side.name
                 self.symbol_table.put(node.left_side.name, ex_symbol)
         else:
             left_side_symbol = self.visit(node.left_side)
             if left_side_symbol:
-                result_symbol = get_new_symbol(node.assignment, left_side_symbol, ex_symbol)
+                result_symbol = get_new_symbol(node.assignment[0], left_side_symbol, ex_symbol)
 
                 if isinstance(result_symbol, str):
                     print("{} in line {}".format(result_symbol, node.line_number))
                     return None
+                ex_symbol.name = node.left_side.name
                 self.symbol_table.put(node.left_side.name, ex_symbol)
                 return result_symbol
 
-        # TODO addassign itp Szymon
-
 
     def visit_Integer(self, node):
-        return VariableSymbol('Variable', 'int')
+        return VariableSymbol('', 'int')
 
     def visit_Float(self, node):
-        return VariableSymbol('Variable', 'float')
+        return VariableSymbol('', 'float')
 
     def visit_Vector(self, node):
         types = []
@@ -104,7 +108,7 @@ class TypeChecker(NodeVisitor):
             types.append(visited_val.type)
         new_type = vector_type(types)
         if new_type:
-            return VectorSymbol('Vector', new_type, len(node.body))
+            return VectorSymbol('', new_type, len(node.body))
         print('Conflicting types in Vector in line {}'.format(node.line_number))
         return None
 
@@ -128,7 +132,7 @@ class TypeChecker(NodeVisitor):
 
         new_type = vector_type(types)
         if new_type:
-            return MatrixSymbol('Matrix', new_type, (len(node.body), size))
+            return MatrixSymbol('', new_type, (len(node.body), size))
         print('Conflicting types of Vectors in Matrix in line {}'.format(node.line_number))
         return None
 
@@ -146,8 +150,8 @@ class TypeChecker(NodeVisitor):
                     print('Bad argument for function {} in line {}'.format(node.fun_name, node.line_number))
                     return None
             if len(symbols) == 2:
-                return MatrixSymbol('Matrix', 'int', (node.fun_body[0].value, node.fun_body[1].value))
-            return MatrixSymbol('Matrix', 'int', (node.fun_body[0].value, node.fun_body[0].value))
+                return MatrixSymbol('', 'int', (node.fun_body[0].value, node.fun_body[1].value))
+            return MatrixSymbol('', 'int', (node.fun_body[0].value, node.fun_body[0].value))
 
         print('Function {} is not defined in line {}'.format(node.fun_name, node.line_number))
         return None
@@ -181,7 +185,7 @@ class TypeChecker(NodeVisitor):
             if 0 > node.fun_body[0].value >= var.size :
                 return print("Out of range")
             return VariableSymbol("Vector", var.type)
-        return print("Can't use range on {} in line {}".format(var.name, node.line_number))
+        return print("Can't use range on {} in line {}".format(var.type_name, node.line_number))
 
 
     def visit_String(self, node):
@@ -226,6 +230,21 @@ class TypeChecker(NodeVisitor):
         if node.instruction2:
             self.visit(node.instruction2)
 
-    def visit_Transposition(self, node): # TODO transposition, uminus Jakub
-        pass
+    def visit_Transposition(self, node):
+        ex_symbol = self.visit(node.factor)
+        if not isinstance(ex_symbol, MatrixSymbol):
+            print("Operator \"'\" (transposition) can only be used with matrices in line {}".format(node.line_number))
+            return None
+
+        ex_symbol.size = (ex_symbol.size[1], ex_symbol.size[0])
+        self.symbol_table.put(ex_symbol.name, ex_symbol)
+        return ex_symbol
+
+    def visit_UMinus(self, node):
+        ex_symbol = self.visit(node.factor)
+        if isinstance(ex_symbol, VectorSymbol):
+            print('Unary minus operator \"-\" can\'t be used with Vector in line {}'.format(node.line_number))
+            return None
+        return ex_symbol
+
 
