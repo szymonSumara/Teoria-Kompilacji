@@ -70,10 +70,12 @@ def build_parser():
                       | expression
                      | string COMMA print_body
                      | expression COMMA print_body"""
+        print("print body " + str(len(p)))
         if len(p) == 2:
-            p[0] = AST.PrintBody(p[1])
+            p[0] = [p[1]]
         else:
-            p[0] = AST.PrintBody(p[1], p[3])
+            p[0] = [(p[1])] + p[3]
+            #p[0] = p[3]
 
 
     def p_return(p):

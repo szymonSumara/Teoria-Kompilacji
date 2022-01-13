@@ -7,7 +7,7 @@ for i = 1:N {
         print i, j;
     }
 }
-
+h = 0 + j;
 while(k>0) {
     if(k<5)
         z = i;
