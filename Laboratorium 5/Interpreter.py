@@ -11,7 +11,10 @@ sys.setrecursionlimit(10000)
 class OperationManager:
     def __init__(self):
         self.operators = {
-            "+" : self.add
+            "+": self.add,
+            "-": self.sub,
+            "<": self.g,
+            ">": self.l
         }
 
     def calculate(self, left_side, operator, right_side):
@@ -20,6 +23,14 @@ class OperationManager:
     def add(self, left_side, right_side):
         return left_side + right_side
 
+    def sub(self, left_side, right_side):
+        return left_side - right_side
+
+    def g(self, left_side, right_side):
+        return left_side < right_side
+
+    def l(self, left_side, right_side):
+        return left_side > right_side
 
 class Interpreter(object):
 
@@ -66,23 +77,43 @@ class Interpreter(object):
         id = node.id
         ne1 = node.ne1.accept(self)
         ne2 = node.ne2.accept(self)
-        j = ne1
-        while j < ne2:
+
+        self.memory.push(None)
+        self.memory.insert(id, ne1)
+        while self.memory.get(id) < ne2:
             try:
+                self.memory.push(None)
                 node.instruction.accept(self)
-                j += 1
             except ContinueException:
-                j += 1
                 continue
             except BreakException:
                 break
+            finally:
+                self.memory.set(id, self.memory.get(id) + 1)
+                self.memory.pop()
+        self.memory.pop()
+
+    @when(AST.While)
+    def visit(self, node):
 
 
+        while node.expression.accept(self):
+            try:
+                self.memory.push(None)
+                node.instruction.accept(self)
+            except ContinueException:
+                continue
+            except BreakException:
+                break
+            finally:
+                self.memory.pop()
        # node.instruction.accept(self)
 
     @when(AST.Block)
     def visit(self, node):
+        self.memory.push(None)
         node.body.accept(self)
+        self.memory.pop()
 
     @when(AST.Assignment)
     def visit(self, node):
@@ -90,10 +121,37 @@ class Interpreter(object):
         self.memory.set(node.left_side.name, node.value.accept(self))
 
 
-
     @when(AST.Integer)
     def visit(self, node):
         return node.value
+
+    @when(AST.Float)
+    def visit(self, node):
+        return node.value
+
+    @when(AST.String)
+    def visit(self, node):
+        return node.value
+
+    @when(AST.Vector)
+    def visit(self, node):
+        body = []
+        for coordinate in node.body:
+            body.append(coordinate.accept(self))
+        return body
+
+    @when(AST.Matrix)
+    def visit(self, node):
+        body = []
+        for row in node.body:
+            body.append(row.accept(self))
+        return body
+
+        return node.body
+
+    @when(AST.Return)
+    def visit(self, node):
+        raise ReturnValueException(node.instruction.accept(self))
 
 
     @when(AST.Print)
@@ -107,6 +165,18 @@ class Interpreter(object):
     def visit(self, node):
         return self.memory.get(node.name)
 
+    @when(AST.If)
+    def visit(self, node):
+        expression = node.expression.accept(self)
+        print(expression)
+        if expression:
+            self.memory.push(None)
+            node.instruction1.accept(self)
+            self.memory.pop()
+        elif node.instruction2 is not None:
+            self.memory.push(None)
+            node.instruction2.accept(self)
+            self.memory.pop()
 
 
 

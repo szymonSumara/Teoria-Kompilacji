@@ -32,11 +32,14 @@ class MemoryStack:
         self.stack[0].put(name, value)
 
     def set(self, name, value): # sets variable <name> to value <value>
+        for stack in self.stack:
+            if stack.has_key(name):
+                return stack.put(name, value)
         self.insert(name, value)
 
     def push(self, memory): # pushes memory <memory> onto the stack
-        pass
+        self.stack.insert(0, Memory("bla bla"))
 
     def pop(self):          # pops the top memory from the stack
-        pass
+        self.stack.pop(0)
 
