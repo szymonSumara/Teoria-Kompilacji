@@ -76,9 +76,7 @@ def build_parser(lexer):
         p[0] = AST.Print(p[2])
 
     def p_print_body(p):
-        """print_body : string
-                      | expression
-                     | string COMMA print_body
+        """print_body : expression
                      | expression COMMA print_body"""
         if len(p) == 2:
             p[0] = [p[1]]
@@ -144,7 +142,6 @@ def build_parser(lexer):
 
     def p_assignment(p):
         """assignment : assignment_left_side assignment_operator expression
-                      | assignment_left_side ASSIGN string
                       | assignment_left_side ASSIGN matrix
                       | assignment_left_side ASSIGN vector"""
         p[0] = AST.Assignment(p[1], p[2], p[3], line_number=lexer.lineno)
@@ -219,7 +216,7 @@ def build_parser(lexer):
 
 
     def p_expression_plus(p):
-        'numeric_expression : numeric_expression ADD term'
+        """numeric_expression : numeric_expression ADD term"""
         p[0] = AST.Expression(p[1], p[2], p[3], line_number=lexer.lineno)
 
 

@@ -18,7 +18,6 @@ class NodeVisitor(object):
             for elem in node:
                 self.visit(elem)
         else:
-            print(node)
             for child in node.children:
                 if isinstance(child, list):
                     for item in child:
